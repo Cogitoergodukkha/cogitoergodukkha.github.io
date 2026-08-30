@@ -1187,9 +1187,18 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
      Your own visits are not counted once you have opened #/owner
      in the browser you read from.
      ----------------------------------------------------------------- */
-  var GOATCOUNTER = '';
+  var GOATCOUNTER = 'cogitoergodukkha';
 
   var SITE = 'reflections on reflections';
+
+  /* set when the visitor count cannot be read; only ever shown to you */
+  var counterNote = '';
+  function refreshCounterNote(){
+    if (!counterNote) return;
+    var el = document.getElementById('hits');
+    if (isOwner()) { el.textContent = ' · ' + counterNote; el.hidden = false; }
+    else { el.textContent = ''; el.hidden = true; }
+  }
   var K_OWNER = 'rr:owner', K_DRAFT = 'rr:draft', K_TOKEN = 'rr:token';
 
   var idx   = document.getElementById('view-index');
@@ -1391,6 +1400,7 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
     chip.hidden = !on || !previewing;
     document.body.classList.toggle('is-owner', on && !previewing);
     if (on) say(tokState, token() ? '已記住' : '未設定');
+    refreshCounterNote();
     note();
   }
 
@@ -1602,18 +1612,31 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
     var el = document.getElementById('hits');
     if (!GOATCOUNTER) return;
     var base = 'https://' + GOATCOUNTER + '.goatcounter.com';
+
+    /* record this visit. count.js skips it when localStorage.skipgc is
+       set, which owner mode does, so your own reading is never counted */
     var s = document.createElement('script');
     s.async = true;
     s.setAttribute('data-goatcounter', base + '/count');
     s.src = 'https://gc.zgo.at/count.js';
     document.body.appendChild(s);
+
+    /* a failure here is only ever reported to you, never to a reader */
+    function trouble(txt){ counterNote = txt; refreshCounterNote(); }
+
     fetch(base + '/counter/TOTAL.json')
-      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(r){
+        if (r.ok) return r.json();
+        throw new Error(r.status === 403
+          ? '訪客數未公開 · turn on the counter endpoint in GoatCounter settings'
+          : '訪客數讀取失敗 ' + r.status);
+      })
       .then(function(j){
         var n = j && (j.count_unique || j.count);
         if (n) { el.textContent = ' · 訪客 ' + n; el.hidden = false; }
+        else trouble('訪客數是空的');
       })
-      .catch(function(){});
+      .catch(function(err){ trouble(String(err.message || err)); });
   }
 
   applyOwner();
