@@ -1,0 +1,982 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Abraham Lim 的十七篇隨筆：徹底的懷疑、原始佛教、語言的邊界。">
+<meta name="author" content="Abraham Lim">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%98%B8%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<title>reflections on philosophy &amp; the Dhamma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Noto+Serif+TC:wght@300;400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --paper:#EDEFE9; --panel:#F5F7F1; --quote:#E4E8DE;
+  --ink:#1B2430; --ink-2:#45525C; --ink-3:#6E7A81;
+  --rule:#C9D0C4; --rule-2:#DCE1D6;
+  --accent:#356F5C; --accent-2:#5E9481;
+  --measure:33em;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#101413; --panel:#161B19; --quote:#1A211E;
+    --ink:#E2E7E0; --ink-2:#AFB9B1; --ink-3:#8A948C;
+    --rule:#2B332F; --rule-2:#212825;
+    --accent:#84C1A8; --accent-2:#5E9481;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#101413; --panel:#161B19; --quote:#1A211E;
+  --ink:#E2E7E0; --ink-2:#AFB9B1; --ink-3:#8A948C;
+  --rule:#2B332F; --rule-2:#212825;
+  --accent:#84C1A8; --accent-2:#5E9481;
+}
+*{box-sizing:border-box}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Newsreader","Noto Serif TC",Georgia,"Songti SC","Source Han Serif SC",serif;
+  font-size:17px;line-height:1.95;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+a{color:inherit}
+::selection{background:var(--accent);color:var(--paper)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+[hidden]{display:none!important}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+
+#progress{position:fixed;top:0;left:0;height:2px;width:0;background:var(--accent);z-index:60}
+
+/* ---------- top bar (post view) ---------- */
+.topbar{
+  position:sticky;top:0;z-index:40;background:var(--paper);
+  border-bottom:1px solid var(--rule);
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:.85rem 1.5rem;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;
+}
+.topbar a{color:var(--ink-3);text-decoration:none;transition:color .18s}
+.topbar a:hover{color:var(--accent)}
+.topbar__home{font-style:normal}
+
+/* ---------- masthead ---------- */
+.masthead{border-bottom:1px solid var(--rule);padding:clamp(3.5rem,9vw,7rem) 1.5rem clamp(2.2rem,4vw,3.2rem)}
+.masthead__inner{max-width:52rem;margin:0 auto;display:grid;gap:1.25rem}
+.masthead h1{
+  margin:0;font-weight:300;font-style:italic;
+  font-size:clamp(2.1rem,6vw,3.6rem);line-height:1.15;letter-spacing:-.015em;text-wrap:balance;
+}
+.byline{
+  margin:0;font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3);
+}
+.standfirst{margin:0;max-width:36em;color:var(--ink-2);font-size:1.02rem;line-height:1.85}
+
+/* ---------- index ---------- */
+.index{max-width:52rem;margin:0 auto;padding:clamp(2.5rem,6vw,4rem) 1.5rem 5rem;display:grid;gap:3.5rem}
+.group{display:grid;gap:1.25rem}
+.group__head{
+  margin:0;display:flex;align-items:baseline;gap:.9rem;flex-wrap:wrap;
+  padding-bottom:.7rem;border-bottom:1px solid var(--rule);
+}
+.group__cn{font-weight:400;font-size:1.18rem;letter-spacing:.02em}
+.group__en{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:.64rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3);
+}
+.group__items{display:grid}
+.post-link{
+  display:grid;gap:.15rem .5rem;text-decoration:none;
+  padding:1.05rem 0;border-bottom:1px solid var(--rule-2);
+  transition:background .18s;
+}
+.post-link:hover{background:var(--panel)}
+.post-link:hover .post-link__title{color:var(--accent)}
+@media (min-width:640px){
+  .post-link{grid-template-columns:7.5rem minmax(0,1fr);align-items:baseline}
+}
+.post-link__date{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:.68rem;letter-spacing:.1em;color:var(--ink-3);
+  font-variant-numeric:tabular-nums;
+}
+.post-link__date:empty{display:none}
+@media (min-width:640px){.post-link__date:empty{display:block}}
+body.no-dates .post-link__date{display:none}
+@media (min-width:640px){body.no-dates .post-link{grid-template-columns:minmax(0,1fr)}}
+.post-link__main{display:grid;gap:.3rem;min-width:0}
+.post-link__title{font-size:1.12rem;line-height:1.5;color:var(--ink);transition:color .18s}
+.post-link__sub{display:block;font-size:.86em;font-style:italic;color:var(--ink-2)}
+.post-link__excerpt{font-size:.92rem;line-height:1.7;color:var(--ink-3)}
+
+/* ---------- post ---------- */
+.postwrap{max-width:var(--measure);margin:0 auto;padding:clamp(2.5rem,6vw,4.5rem) 1.5rem 4rem}
+.post{display:grid;gap:1.15rem}
+.eyebrow{
+  margin:0;font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:.68rem;letter-spacing:.18em;color:var(--ink-3);text-transform:uppercase;
+}
+.post__title{
+  margin:0;font-weight:400;font-size:clamp(1.55rem,4.4vw,2.15rem);line-height:1.35;
+  letter-spacing:.01em;text-wrap:balance;
+}
+.post__title .sub{display:block;font-size:.78em;color:var(--ink-2);font-style:italic;margin-top:.3rem}
+.post__date{
+  margin:-.4rem 0 .6rem;font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:.7rem;letter-spacing:.12em;color:var(--ink-3);font-variant-numeric:tabular-nums;
+}
+.post__date:empty{display:none}
+.post p{margin:0}
+.post p.aside{color:var(--ink-3);font-size:.94rem;line-height:1.8}
+.post ol,.post ul{margin:0;padding-left:1.4rem;display:grid;gap:.6rem}
+
+blockquote{
+  margin:.4rem 0;padding:1.1rem 1.3rem;background:var(--quote);
+  border-left:2px solid var(--accent);display:grid;gap:.55rem;
+}
+blockquote p{margin:0;font-size:1.02rem}
+blockquote .lang{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:.68rem;letter-spacing:.14em;color:var(--ink-3);text-transform:uppercase;
+}
+blockquote.verse p{text-align:center;line-height:2.1;letter-spacing:.06em}
+
+.qa{display:grid;gap:1.1rem;margin:.4rem 0}
+.qa > div{display:grid;gap:.35rem;padding-left:1rem;border-left:1px solid var(--rule)}
+.qa .q{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.72rem;letter-spacing:.12em;color:var(--accent);text-transform:uppercase}
+
+.callout{padding:1rem 1.2rem;background:var(--panel);border:1px solid var(--rule-2);display:grid;gap:.4rem;font-size:.95rem;color:var(--ink-2)}
+.callout .lang{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.68rem;letter-spacing:.14em;color:var(--ink-3);text-transform:uppercase}
+.callout p{margin:0}
+
+.source{
+  margin:0;font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:.72rem;letter-spacing:.06em;color:var(--ink-3);overflow-wrap:anywhere;
+}
+.source a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--rule)}
+.source a:hover{border-color:var(--accent)}
+
+/* ---------- post nav ---------- */
+.postnav{
+  max-width:var(--measure);margin:0 auto;padding:0 1.5rem 5rem;
+  display:grid;gap:.75rem;border-top:1px solid var(--rule-2);padding-top:1.5rem;
+}
+.postnav a{
+  display:grid;gap:.2rem;text-decoration:none;padding:.75rem 0;
+}
+.postnav .lbl{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);
+}
+.postnav .ttl{color:var(--ink-2);line-height:1.5}
+.postnav a:hover .ttl{color:var(--accent)}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--rule);padding:2.5rem 1.5rem 3.5rem}
+.footer__inner{
+  max-width:52rem;margin:0 auto;display:flex;flex-wrap:wrap;gap:1rem 2rem;
+  align-items:center;justify-content:space-between;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);
+}
+.footer__inner button{
+  font:inherit;color:var(--ink-2);background:transparent;
+  border:1px solid var(--rule);padding:.55rem .9rem;cursor:pointer;
+  transition:border-color .18s,color .18s;
+}
+.footer__inner button:hover{border-color:var(--accent);color:var(--accent)}
+</style>
+</head>
+<body>
+<div id="progress" aria-hidden="true"></div>
+
+<div class="topbar" id="topbar" hidden>
+  <a class="topbar__home" href="#/">← 目录 · All essays</a>
+  <a href="#/" aria-hidden="true">reflections · Abraham Lim</a>
+</div>
+
+<div id="view-index">
+  <header class="masthead">
+    <div class="masthead__inner">
+      <p class="byline">Abraham Lim · 隨筆十七篇</p>
+      <h1>reflections on philosophy &amp; the Dhamma</h1>
+      <p class="standfirst">關於徹底的懷疑、原始佛教、語言的邊界，以及在相信與抗拒之間來回擺盪的十七篇文章。</p>
+    </div>
+  </header>
+  <main class="index">
+      <section class="group">
+        <h2 class="group__head"><span class="group__cn">信仰與懷疑之間的拉鋸</span><span class="group__en">Series One</span></h2>
+        <div class="group__items">
+        <a class="post-link" href="#/faith-1" data-id="faith-1">
+          <span class="post-link__date" data-date-for="faith-1"></span>
+          <span class="post-link__main">
+            <span class="post-link__title">宗教与科学是抵触的吗？</span>
+            <span class="post-link__excerpt">我的人生當中有幾個決定性時刻跟宗教有很密切的關係。這是一個不斷在相信與抗拒宗教之間擺盪與掙扎的漫長過程—⋯</span>
+          </span>
+        </a>
+        <a class="post-link" href="#/faith-2" data-id="faith-2">
+          <span class="post-link__date" data-date-for="faith-2"></span>
+          <span class="post-link__main">
+            <span class="post-link__title">如何为基督教教义辩护？</span>
+            <span class="post-link__excerpt">最近跟几个朋友分享了一部小説：BrothersKaramazov。</span>
+          </span>
+        </a>
+        <a class="post-link" href="#/faith-3" data-id="faith-3">
+          <span class="post-link__date" data-date-for="faith-3"></span>
+          <span class="post-link__main">
+            <span class="post-link__title">傳說有一種東西叫快樂</span>
+            <span class="post-link__excerpt">趁現在還沒有死掉、也還沒有涅槃、或被德文搞瘋掉之前，隨便說一下我的研究。</span>
+          </span>
+        </a>
+        <a class="post-link" href="#/faith-4" data-id="faith-4">
+          <span class="post-link__date" data-date-for="faith-4"></span>
+          <span class="post-link__main">
+            <span class="post-link__title">一神論的歷史包袱、佛法與畢氏定理</span>
+            <span class="post-link__excerpt">一切，是徹底懷疑論怀疑的对象。</span>
+          </span>
+        </a>
+        </div>
+      </section>
+      <section class="group">
+        <h2 class="group__head"><span class="group__cn">不可言喻</span><span class="group__en">Series Two</span></h2>
+        <div class="group__items">
+        <a class="post-link" href="#/ineff-1" data-id="ineff-1">
+          <span class="post-link__date" data-date-for="ineff-1"></span>
+          <span class="post-link__main">
+            <span class="post-link__title">這景观，美得无法用言語形容</span>
+            <span class="post-link__excerpt">在我讀過的哲學文献当中，對我啟發最深的，是Derrida的《書寫與差異》。</span>
+          </span>
+        </a>
+        <a class="post-link" href="#/ineff-2" data-id="ineff-2">
+          <span class="post-link__date" data-date-for="ineff-2"></span>
+          <span class="post-link__main">
+            <span class="post-link__title">到達涅槃是一種什麼樣的狀態？<span class="post-link__sub">What is it like to reach nibbāna?</span></span>
+            <span class="post-link__excerpt">在原始佛教的經典中有提到四種聖人：</span>
+          </span>
+        </a>
+        <a class="post-link" href="#/ineff-3" data-id="ineff-3">
+          <span class="post-link__date" data-date-for="ineff-3"></span>
+          <span class="post-link__main">
+            <span class="post-link__title">颜色的对调</span>
+            <span class="post-link__excerpt">高行健曾說："作家的创造性恰恰在⋯⋯语言说过了的地方方才开始，在这种语言尚未充分表述之处加以诉说。"</span>
+          </span>
+        </a>
+        <a class="post-link" href="#/ineff-4" data-id="ineff-4">
+          <span class="post-link__date" data-date-for="ineff-4"></span>
+          <span class="post-link__main">
+            <span class="post-link__title">Let's upload our mind, and enjoy the ride</span>
+            <span class="post-link__excerpt">自从Chatgpt的问世起，我就一直暗暗盼望，有生之年会进入到一個Cyberpunk的世界。</span>
+          </span>
+        </a>
+        </div>
+      </section>
+      <section class="group">
+        <h2 class="group__head"><span class="group__cn">认识自己</span><span class="group__en">Series Three</span></h2>
+        <div class="group__items">
+        <a class="post-link" href="#/self-1" data-id="self-1">
+          <span class="post-link__date" data-date-for="self-1"></span>
+          <span class="post-link__main">
+            <span class="post-link__title">金剛經 · 一切有為法</span>
+            <span class="post-link__excerpt">金剛經里，有一段非常有名的話：</span>
+          </span>
+        </a>
+        <a class="post-link" href="#/self-2" data-id="self-2">
+          <span class="post-link__date" data-date-for="self-2"></span>
+          <span class="post-link__main">
+            <span class="post-link__title">每个人有每个人的想法 ·「我不知道」</span>
+            <span class="post-link__excerpt">（1）你是不是有说过这类的话："每个人有每个人的想法，不要把自己的想法套在别人身上"？</span>
+          </span>
+        </a>
+        </div>
+      </section>
+      <section class="group">
+        <h2 class="group__head"><span class="group__cn">读经札记</span><span class="group__en">Series Four</span></h2>
+        <div class="group__items">
+        <a class="post-link" href="#/sutta-1" data-id="sutta-1">
+          <span class="post-link__date" data-date-for="sutta-1"></span>
+          <span class="post-link__main">
+            <span class="post-link__title">太初有道；道成肉身？</span>
+            <span class="post-link__excerpt">世界的起源是什么？</span>
+          </span>
+        </a>
+        <a class="post-link" href="#/sutta-2" data-id="sutta-2">
+          <span class="post-link__date" data-date-for="sutta-2"></span>
+          <span class="post-link__main">
+            <span class="post-link__title">相应部 25.11</span>
+            <span class="post-link__excerpt">如是我闻，在舍卫城。</span>
+          </span>
+        </a>
+        <a class="post-link" href="#/sutta-3" data-id="sutta-3">
+          <span class="post-link__date" data-date-for="sutta-3"></span>
+          <span class="post-link__main">
+            <span class="post-link__title">爲什麽在《转法轮经》里，会提到"集谛"要被舍弃？</span>
+            <span class="post-link__excerpt">《转法轮经》可能是上座部佛教中最有名的一部经。</span>
+          </span>
+        </a>
+        <a class="post-link" href="#/sutta-4" data-id="sutta-4">
+          <span class="post-link__date" data-date-for="sutta-4"></span>
+          <span class="post-link__main">
+            <span class="post-link__title">第二支箭</span>
+            <span class="post-link__excerpt">看佛經，从来都沒有让我产生一种"朝聞道，夕死可矣"的感受。更沒有"這段经文自此讓我明白我的整个人生在整個⋯</span>
+          </span>
+        </a>
+        </div>
+      </section>
+      <section class="group">
+        <h2 class="group__head"><span class="group__cn">其他随笔</span><span class="group__en">Series Five</span></h2>
+        <div class="group__items">
+        <a class="post-link" href="#/misc-1" data-id="misc-1">
+          <span class="post-link__date" data-date-for="misc-1"></span>
+          <span class="post-link__main">
+            <span class="post-link__title">意識淺問</span>
+            <span class="post-link__excerpt">我们除了身體，還具有什麼？可能出现的答案會是：意識。</span>
+          </span>
+        </a>
+        <a class="post-link" href="#/misc-2" data-id="misc-2">
+          <span class="post-link__date" data-date-for="misc-2"></span>
+          <span class="post-link__main">
+            <span class="post-link__title">观影随想<span class="post-link__sub">Oppenheimer · Anatomy of a Fall · A Separation</span></span>
+            <span class="post-link__excerpt">（几乎没有剧透）</span>
+          </span>
+        </a>
+        <a class="post-link" href="#/misc-3" data-id="misc-3">
+          <span class="post-link__date" data-date-for="misc-3"></span>
+          <span class="post-link__main">
+            <span class="post-link__title">艱鉅的歷史究責</span>
+            <span class="post-link__excerpt">今年二月，波兰政府通过一项法案。此法案分成两个部分：禁止使用"波兰死亡集中营"等字眼来指称二战期间纳粹在⋯</span>
+          </span>
+        </a>
+        </div>
+      </section>
+  </main>
+</div>
+
+<div id="view-post" hidden>
+  <div class="postwrap" id="postwrap">
+    <article class="post" id="faith-1" hidden>
+      <p class="eyebrow">信仰與懷疑之間的拉鋸 · 一</p>
+      <h1 class="post__title">宗教与科学是抵触的吗？</h1>
+      <p class="post__date" data-date-for="faith-1"></p>
+      <p>我的人生當中有幾個決定性時刻跟宗教有很密切的關係。這是一個不斷在相信與抗拒宗教之間擺盪與掙扎的漫長過程——要這樣去歸結目前這個人生，或許也不為過。</p>
+    <p>從以前到現在，相信宗教對我來講最大的障礙就是我不理解宗教。我沒有成功理解過幾乎任何宗教。而不理解一件事就說不上是否相信這一件事。我說：鮮豔的企業在雲端里狠狠地入睡。你相信嗎？除非你理解我在說什麼，不然實在談不上相不相信。</p>
+    <p>所以，在決定是否相信一件事以前，要先理解這件事。很合乎情理不是嗎？但其實合乎情理的事，是很罕見的。真正常見的，是人們往往在還沒有理解之前就已經先宣稱自己相信了某件事。</p>
+    <p>以基督宗教為例，幾個有名的事蹟連基督徒自己都承認無從理解而被當成奧祕：基督降生或所謂道成肉身、三位一體、聖體聖事等。我不排除有人確實認為自己理解了這些構成基督教義的核心元素，並因此感受到自己信仰的牢靠。但有更多的人就算意識到自己不理解這些事蹟，仍然相信自己是相信基督教的。</p>
+    <p>我不理解這些事蹟，更不能理解在意識到自己不理解這些事蹟的情況下相信基督教是什麼意思。</p>
+    <p>我不曾仔細追究這些事蹟的內涵。阻擋我相信基督教的是更普遍更入門的難題。之所以更普遍更入門，因為任何宗教只要預設了一個全知全能全善的神，這一老套難題就勢必會出現：如果全知全能全善的神存在，就不会容许邪惡的发生。但邪惡是事实，因此没有神。</p>
+    <p>基督宗教怎麼化解神和邪惡之間的矛盾？我遇過不同的答覆。但從來沒有徹底搞通過任何一種解答。我甚至不太確定究竟是因為我的智力有限，還是其實那些解答本來就是胡扯。這種認知上的混亂曾經使我不安、焦躁、沮喪。</p>
+    <p>我始終沒有理解，也就始終沒有相信基督宗教。我曾經相信存在著一個可以聆聽內心的神，但距離基督宗教所描繪的那個性格捉摸不定、說話沒有多少人聽懂卻老是要求敬拜的神太遠。</p>
+    <p class="aside">（基督徒愛說不敬拜神是傲慢的表現，但這麼去使用傲慢早就脫離傲慢的意義了）</p>
+    <p>基督宗教所描繪的神是否存在，從過去到現在我探索這個課題的歷程，大致可以分成三個階段。這三個階段基本上是由三種不同的心態在主導：從不知道神是否存在，到不理解神的存在意味著什麼，到我覺得這個課題不重要。</p>
+    <p>如今，就連那個聆聽內心的神是否存在，我也覺得無關緊要了。但無論是哪一種神，無論在哪一個階段，其存在是我從來都沒有徹底否定過的。</p>
+    <p>拿基督教描繪的神來說，不理解教義而否定其存在，跟不理解教義而相信其存在，在我看來都是反智的表現。否定其存在的人不在少數。會否定的人往往也不太理會教義。會基於神跟邪惡之間的矛盾而否定神的人也算相當高明了，但還是屬於少數。更多的人之所以否定，所依據的理由通常是因為科學無法證實神的存在。理由直接，卻很薄弱。</p>
+    <p>無法證實就等於沒有嗎？好像只有在法庭上才有必要啟動這種邏輯。就神是否存在這個課題而言，不經理解的相信是空洞；無法證實就否定是匆促。在選擇相信和否定之間，很多人似乎都忘了，還有"不知道"這個選項。</p>
+    <p>依據科學而否定神存在的人當中，真正理解科學的人又有多少呢？比如我們了解讓物理學家或哲學家頭腦打結的量子物理嗎？偏偏量子物理又是現今大部分科學理論的基礎。如果不瞭解量子物理，那麼當我們宣稱相信科學時，其實是在相信什麼呢？說穿了，不經理解的信任不是發生在宗教而已，同樣情況也出現在我們對科學的信任上。我想這仍舊反映了這個潛藏在許多人意識深處的迷思：若不選擇否定，就得選擇相信。忘了在這兩個選項之外還有第三個：不知道。</p>
+    <p>其實連諾貝爾物理獎得主 Richard Feynman 都說過：那些認為自己了解量子物理的人並不了解量子物理。我不清楚沓說這句話的時候有沒有把自己算在內。但就算科學家不了解自己所鑽研的對象，我們也不必太驚訝。畢竟如果瞭解了那還須要鑽研嗎？正是對某個課題不瞭解所以才有鑽研的可能。</p>
+    <p>科學家大部分時候都還在了解自己所研究的對象。所以，問科學家相不相信自己所研究的對象，這個問法或許不只不恰當，而是已經扯太遠。對那些尊崇科學而抗拒宗教的非科學家，我只想提醒兩件事：</p>
+    <ol>
+      <li>沒有證實過的事不要輕易否定。例如只因為科學沒有證實來生的存在就否定來生，這聽來就很獨斷。</li>
+      <li>不經理解而相信科學，會讓這份信任跟大部分的信徒對其宗教的信任趨於一致。以我個人經驗而言，我不太可能一項項去檢視科學家作的各種宣稱。但只要我當下的主觀感覺是這些宣稱不會為我們的生活帶來負面的影響或者沒有引發我的興趣，我會擺一邊。若有人問起，我會直接承認自己對這些宣稱的無知就好了，既不選擇相信也不選擇否定。</li>
+    </ol>
+    <p>如果你還認為許多人對宗教的信任其實無異于迷信，那麼不經理解而信任科學，甚至有機會使科學也落入迷信的領域。這很可能不是我們期待的局面。自 Newton 的時代起，許多哲學家一直致力於劃出科學之所以有別於其它領域像是占星術、精神分析等的界線：是什麼讓科學如此成功，可以精準預測許多現象的發生，可以開創許多顛覆想像的科技產物？可是尽管科学之魅力不容否定，那讓科學跟其它領域區別開來的獨特之處究竟是什麼，學術界至今沒有共識。</p>
+    <p>我傾向認為科學跟非科學之間的界線注定模糊。所以如果我對來自非科學的學說保持懷疑，那我同樣會——甚至應該——將懷疑的態度貫徹到科學的範圍內。這不過是回歸到科學作為一種志業最原初的懷疑精神。老掉牙地說，科學源自對教條的質疑以及對權威的反抗。若只因為是科學家講的話就毫無保留地相信，等於視科學為權威，因而違背科學研究的初衷，也因此構成了對科學最大的諷刺。</p>
+    </article>
+    <article class="post" id="faith-2" hidden>
+      <p class="eyebrow">信仰與懷疑之間的拉鋸 · 二</p>
+      <h1 class="post__title">如何为基督教教义辩护？</h1>
+      <p class="post__date" data-date-for="faith-2"></p>
+      <p>最近跟几个朋友分享了一部小説：<em>Brothers Karamazov</em>。</p>
+    <p class="aside">（中文译名是《卡拉玛佐夫兄弟们》）</p>
+    <p class="aside">（村上春树曾经这么问过："在东京，有多少人能叫得出这四兄弟的名字？"）</p>
+    <p class="aside">（原来，看完 Brothers Karamazov 的读者，也未必叫得出这四人的名字）</p>
+    <p>是一部很長的小说。我联同一位基督徒朋友，只分享了里头連著去的两章：《離經叛道》和《宗教大法官》。</p>
+    <p>小説作者 Fyodor Dostoevsky 在《離經叛道》這一章裏，叙述了講求理性的二哥 Ivan，向作为东正教实习修士的弟弟 Alyosha，提出了經典的邪惡難題（The Problem of Evil）：如果這世上有神，爲什麽我們會承受苦難？</p>
+    <p class="aside">（雖然苦難不等同於邪惡，但在我看过的文献当中，很少在这两者之间多作区分，往往交替使用。这其实也不难理解，广义而言，我们直接将造成痛苦的事件界定为邪恶，而邪恶势必导致痛苦。两者可理解成具有因果关系。提到一个，就自然提到另外一个。）</p>
+    <p>邪恶难题所预设的神，具備了全知全能全善這三種特性：神，无所不知，而且无所不能。至於全善怎么理解，我不確定。可以确定的是，具備全善的神，至少會在能力范围之内最大化善意與善行。</p>
+    <p>問題是，這樣的神如果存在，那麽爲什麽世上還會出現邪惡？</p>
+    <p>很快地，我们就可以论证：邪恶既是事实，所以没有这样的神。这也从而揭示出基督教教义的根本缺陷（当然不只基督教），除非基督教从一开始就不预设有这样的神。</p>
+    <p>我们其实还可以将邪恶区分成天灾和人祸。回到 Brothers Karamazov 中的《离经叛道》這一章，不知道爲什麽，作者将邪恶难题局限在人祸上，且是针对特定的人祸：由小孩子遭受的人禍。</p>
+    <p>天災議題被忽略，一方面虽错失邪恶难题的一个论点，但由於鎖定兒童的苦難，一方面也使这一難題更爲尖銳。毕竟面對成人的苦難，基督徒姑且可以解釋為一定是沓從前做過什麽壞事，以致現在遭到報應。可是小孩子呢？小孩子遭受苦難——例如被虐——我們又如何能將這苦難解釋为這小孩從前行惡所形成的報應？</p>
+    <p class="aside">（除非你要引進輪回來解釋，那麽這形上學體系也有夠熱鬧）</p>
+    <p>這基本上就是《離經叛道》的内容。Ivan 向 Alyosha 叙述邪恶难题的整个过程慷慨激昂，是整本書最能引發我共鳴的一章。十幾年前看这本書時，覺得歷史上最瞭解我的人，莫过于 Dostoevsky 這一百多年前的小説家。後來我發現，基督徒有一套回应邪惡難題的方式，是小说家没有完整处理的。最近在籌備分享内容的过程中，再度地思考一遍邪惡難題，現在覺得基督徒為其信仰的辯護，其實還是蠻弱的（我想是吧，希望是）。</p>
+    <p class="aside">（下面的思考其实也不是我的独创，文献也可以找得到）</p>
+    <p>繼續鎖定小孩子遭遇的人禍，例如被虐。基督徒往往在這一關節就會引进自由意志。沓们会说："自由意志是神赋予我们最为宝贵的特质。但拥有自由意志就意味着我们可以在善恶之间作选择。如果神在我们即将选择行恶的时候干涉我们的行为，那等于干涉了我们的意志，而这就违背了神赋予我们自由意志的原意。"</p>
+    <p>很多基督徒都作过类似回应。这个回应有意无意地忽視了实际邪恶案例的严重性。例如儿童被虐或被性侵的严重性。这回应其实在表示：在儿童即将被虐的那一刻，神面对解救儿童和保全即将行恶的人的自由意志这两个选项之间，神选择了后者。</p>
+    <p>這是一個不可思議的選擇。在这选择下，自由意志凌驾了免於創傷的人生。這選擇預設的善惡觀嚴重偏離了我們的善惡觀。設想一下，面對這個選擇的不是神，而換成是你的至愛，叫池池好了。池池不知何故見證了某個兒童即將被虐的一刻，卻選擇不去解救。如果你發現池池的理由是要维护行恶的人的自由意志，你的反應是什麽？你是否要開始懷疑池池的人格？重新認識池池的人生觀價值觀？甚至要開始懷疑其實你可能從來都沒有真正認識過池池？因此也更加談不上愛沓？</p>
+    <p>如果你不能够理解池池的做法及其背后的动机，那就不能理解作出同一个选择的神。如果你因为自己的至爱作出这个选择迫使你重新检视、且悬置你对至愛的认识，那你就同樣要被迫檢視且懸置你對神的認識。神的这个选择反映的善惡觀，其内涵爲何、怎麽運作、判斷善惡的準則是什麽，我們一無所知。從我們自己的善惡觀出發，也沒有将善的特质归属给神的理據。若堅持將善的特質歸屬給神，簡直就是罔顧是非善惡了。</p>
+    <p>神若是全知全能，就不會是善，更別説全善。换言之，神不可能三者俱全。</p>
+    <p>上面的论述不是针对基督教而已，而是所有预设了全知全能全善的神的一神论宗教。</p>
+    <p>不過，要靠理性的论述去动摇一个人的信仰，跟发生奇迹几乎没有不同。不管奇迹会不会发生，在思考這一難題的過程中，我倒是发现了一个为全知全能全善的神辩护的方式。</p>
+    <p>要消解邪惡難題，信徒不如就干脆否定所有邪恶事迹的真实性好了。也就是，这一切我们所知道的邪恶事迹都不曾发生，都是假的，是神為我們编造的幻覺。若在這些苦難當中，有的是我們的親身經歷，那都是一場場神为我们编排的噩夢。神的目的是让我们信以为真，引导我們真正發自内心充分體會到邪惡的本質，甚至不惜讓我們因爲這個體會而批判神、控訴神、乃至否定神。直到我們真正抛棄整個信仰之後，神才在最後出现揭穿這一切，告訴我們：放心，這些邪惡事件其實都不曾發生。</p>
+    <p>這麽极端的神義論（Theodicy，爲神的正義辯護的理論），我很難想象哪個信徒會接受。接受这套神义论就意味着，信徒在成爲信徒之前，要首先經歷我剛在上面展演一遍對神跟邪惡所進行的思辨。而且，在神亲自向你揭示一切苦难的确是幻觉、而这套神义论是千真万确之前，你必須先放弃对神的信仰。</p>
+    <p>很可能对许多信徒而言，这简直是一种精神考驗。因为按照这套神义论，信徒必须很撕裂地去否定自己内心渴求相信的神。在这个意义下，这套神义论跟它所要回应的邪恶难题，本质上是很接近的。或许在这个意义下，其实只有少数的无神论者或不可知论者如我，才是最合格的一神论信徒。</p>
+    <p>所以，也许神真正要带给世间的不是什么谜一般的话语、经典、或启示，其实这些本就该被严格地批判与推敲，接受这套神义论的話就更是如此。神留给我们的也不是什么幸福圆满的人生或来世的盼望，而是一个要求我们以切身痛苦体验来深度拷问善恶观、以致弃绝神的逻辑问题。</p>
+    </article>
+    <article class="post" id="faith-3" hidden>
+      <p class="eyebrow">信仰與懷疑之間的拉鋸 · 三</p>
+      <h1 class="post__title">傳說有一種東西叫快樂</h1>
+      <p class="post__date" data-date-for="faith-3"></p>
+      <p>趁現在還沒有死掉、也還沒有涅槃、或被德文搞瘋掉之前，隨便說一下我的研究。</p>
+    <p>如果沒有變數的話，我的研究主要由兩大課題構成：徹底的懷疑論和佛法。</p>
+    <p>很濃縮地說，徹底懷疑論回應的問題是：存在在這個世界上，有什麼事情是我非得相信不可的？</p>
+    <p>佛法回應的問題是：存在在這個世界上，我要做什麼事才會快樂？</p>
+    <p>先說一下第一個問題好了：</p>
+    <p>一個人如果是徹底懷疑論者，顧名思義，沓企圖懷疑一切。但這有可能嗎？一個人真的可以無所不疑什麼都不相信嗎？我們可以懷疑疫苗是否可靠。我們可以懷疑沒有神、張國榮還在這世上。我們可以懷疑人類其實沒有登過月、月球是乳酪做成的、懷疑政客在說謊（這有什麼好懷疑）、另一半出軌等等。</p>
+    <p>但你有沒有懷疑過你現在是不是在做夢（Descartes）？或者其實你是一隻蝴蝶，夢到自己正在看這一段文字（莊子，Love Death + Robots）？又或者，稍微不那麼老掉牙一點，會不會其實整個宇宙，並沒有科學家所說有幾十億年那麼久遠，而是五分鐘之前才出現（Russell）？我会不会其实是某个科学家在观察着的一个大脑，被沓植入各种感受，例如正在看这段文字的感受（Putnam）？我会不会從出生到現在其实整个人一直浸在營養液裡面為電腦提供能量（大家耳熟能詳的 Matrix）？</p>
+    <p>如果还要再跟上時代的話，Nick Bostrom (2003) 和 David Chalmers (2022) 则是认为我们有可能是处于虚拟世界里面。沓们的想法相当接近。我说一下 Bostrom 的。沓認為，就我們目前擁有的模擬技術來看，這個技術迟早會發展得更加完善精细。以後的世代很大可能會運用這個技術，大量地模擬从远古时代到未来人类文明的演变。之所以要大量地模拟，这样沓们就可以对这些模拟出来的情境作微调，来观察不同的情境会出现什么样的演变过程。Bostrom 认为，模拟技术若精细到一定程度有可能会产生意识。于是沓提出一个问题，我们会不会其实是被未来的世代所模拟出来的"文明"？</p>
+    <p>回到徹底懷疑論者。这家伙是要指出，如果我沒有辦法證明，我現在不是在做夢、不是一隻蝴蝶、宇宙不是五分鐘之前才出現、我不是桶中脑、没有在为电脑输送能量、不是被未来世代的人给模拟，那有什麼事情是我可以確定、是我真正可以相信的？</p>
+    <p>好像沒有。</p>
+    <p>還是有啦。不管是不是在做夢，你都不可能懷疑你在懷疑。你不可能懷疑你正在思考。我們也很難懷疑 1+1=2。就算真的可以不确定我是不是真的正在看这一段文字，至少我不能怀疑我有正在看这一段文字的主观经验。</p>
+    <p>显然，还是有一些事，只要稍微思考一下就会发现，那都是我们可以确定的。</p>
+    <p>当然，這樣我們還是會嫌可以確定的事未免太少了吧？</p>
+    <p>我的研究的前半部是要證明，我們可以確定，</p>
+    <ol>
+      <li>我們不是被未來世代給模擬，</li>
+      <li>我们不是桶中脑，</li>
+      <li>也不是住在 Matrix 里面。</li>
+    </ol>
+    <p class="aside">（很抱歉，沒辦法證明張國榮還在這世上）</p>
+    <p>（1）是最容易證明的。兩三句話就說完了。有興趣的可以思考一下。所有的暗示都已經寫在這里了。</p>
+    <p>那這些跟佛法有什麼關係？</p>
+    <p>我在最前面說，佛法回應的問題是：存在在這個世界上，我要做什麼事才會快樂？</p>
+    <p>佛法的答案是：不去相信任何事（难道佛陀是徹底懷疑論者？）</p>
+    <p>當然這是我個人對佛法的理解。研究的後半部是要說明，為什麼這樣去理解佛法是成立的。而且也必須說明，我說的佛法是哪家的佛法。再來就是，如果有些事情是確定無疑的，我們怎麼還可以不相信呢？難道快樂真的只是傳說？</p>
+    </article>
+    <article class="post" id="faith-4" hidden>
+      <p class="eyebrow">信仰與懷疑之間的拉鋸 · 四</p>
+      <h1 class="post__title">一神論的歷史包袱、佛法與畢氏定理</h1>
+      <p class="post__date" data-date-for="faith-4"></p>
+      <p>一切，是徹底懷疑論怀疑的对象。</p>
+    <p>但怀疑一切，这种如此吃力激進的懷疑，就交給哲學家或瘋子去进行（沓們是不是同一種人？）</p>
+    <p>我们一般不是这两种人，則會下意识地縮窄怀疑的范围。</p>
+    <p>只是，我也曾經不止一次指出，我們實際質疑的，遠比我們應該質疑的來得少。</p>
+    <p>例如我說過，我們不太會懷疑科學，即便我們对科学其实一知半解。</p>
+    <p>最近上了一門探討量子力学根基的课。教授几乎每一堂课都会提醒：量子物理未必是正确的，而且很可能会被取代。看，我已經不是引用 Richard Feynman 了，而是自己的亲身遭遇（有發現到我在诉诸权威吗？）</p>
+    <p>雖然說，最有資格挑戰科学理论的其实就是科学家，但我們這些非科學家實在也沒有必要以科學之名，去提倡什麼主張。常見的例子就是，總有人以科學之名宣稱沒有神沒有前世今生、世上除了物質沒有別的。</p>
+    <p>没有任何科学理论有在否定上帝和前世今生。所以其实很多时候，所谓科学跟宗教的冲突是一个假议题，是稍微动用逻辑就可以化解掉的议题。</p>
+    <p>為什麼我老是在說這些淺顯的道理？沒辦法。就連好些哲學教授都普遍在犯這種基本謬誤。所以我也不太確定這些道理是不是真的很淺顯。</p>
+    <p>类似地，稍微动用逻辑就知道，就算上帝跟前世今生没有被科学否定掉，也不表示那些东西真的存在。但至少我们可以觉察到：要質疑上帝、前世今生的真伪，并不要求我们要具备科學理論的認識。</p>
+    <p>就像我也說過，從邪恶和苦難的現實可以推出不存在上帝。這才是最穩固的推翻一神論的方式。</p>
+    <p>當然，具有基督教背景的哲學研究者，不太可能會同意这个邪恶难题的推論。近年已经有不少文献指出，這些基督教哲學研究者不是邏輯不通，而是沓們的善惡觀"不太尋常"。</p>
+    <p>一神论的教义几乎都会对整個宇宙的起源、發展走向、目的等提出一套说法。从一神论的观点出发，地球可以不是宇宙的中心，但人类一定是。人类史上出现的每一個事件，在上帝創造宇宙的那一刻起，沓不只是預見，而是早已安排妥當。所以一定要有 Abraham 这个犹太教、基督教、伊斯兰教的始祖、一定要有摩西、耶穌一定要降生，而且一定要在古羅馬時代、一定要被出賣被迫害、被釘在十字架、死而复活，这一切的发生最终的目的是要拯救深陷於罪惡的人类。這才是上帝的宇宙大藍圖中，为了创造最理想人類，非經歷不可的必要過程。</p>
+    <p>大部份的基督徒都認定上面的人事物是真實發生的，而且是構成基督教義的重要事件。</p>
+    <p>我在這裡主要針對的是基督教。但不是只有基督教的教義才高度取決於歷史的真實性。以我的觀察，是所有的一神論宗教。</p>
+    <p>要為一神论辯護，克服邪恶难题还只是其中一关而已。一神论者还要证明（聽好，是证明）那些推動上帝創世工程的關鍵事蹟是確實發生。這又多一關。但就算這些事蹟真的發生，難道就可以證明有神嗎？仍舊不能。我們可以像倪匡老師那样，為這些事件的來由編上一百個跟神无关的故事来解释（雖然可能会有 99 个涉及外星人）。一神論者只要不能夠排除這些故事的可能性，就证明不了神的存在。这又是一关。</p>
+    <p>一神論的教義本身已經很難說得上融貫，還要再進一步搭配這些歷史包袱。這些教義，需要越多的歷史事件来支撑，就越难為真。</p>
+    <p>說了这么多，當然是為了拿一神论，跟不预设全知全能全善的神的佛教作一个鮮明對照。更确切地，是跟原始佛教作對照。</p>
+    <p>其實佛教的教義，用一句話概括就是：苦源自於慾望的不滿足。</p>
+    <p>那事情簡單了。要滅苦，就要先消滅慾望——這就是 Siddhattha Gotama 的大發現！比畢达格拉斯發現的畢氏定理還要直觀還要簡單。</p>
+    <p class="aside">（学过微分幾何的讀者可以拿別的定理作例子，例如質數有無窮多個）</p>
+    <p>所以原始佛教的教義至少還要依賴喬達摩這個歷史人物的真實性，是这样？</p>
+    <p>这就是为什么我要提毕氏定理。畢氏定理是否為真根本就不取決於是否由畢达格拉斯发现、也不取决于是不是真有這個人物。同樣道理，就算以後我們發現其實沒有喬達摩這個人物，這還是不會動搖苦跟慾望的緊密關係。</p>
+    <p>在時間的長河中，科學理論可以被淘汰；就算不是因為政治因素而被篡改，歷史事件也可以因為出土的文物而被改寫。但有些基本的邏輯規則（雖然未必是全部）卻不會隨著時間的演進而有任何的更動。</p>
+    <p>質言之，可以純粹經由思索就能確認為真的事，始終要比任何歷史事件來得可靠。而透過要比平常更激进的懷疑，讓我們更易於發掘各個宗教教義之間的根本差異。至於哪一個更靠向真實，那就不言而喻了。</p>
+    </article>
+    <article class="post" id="ineff-1" hidden>
+      <p class="eyebrow">不可言喻 · 一</p>
+      <h1 class="post__title">這景观，美得无法用言語形容</h1>
+      <p class="post__date" data-date-for="ineff-1"></p>
+      <p>在我讀過的哲學文献当中，對我啟發最深的，是 Derrida 的《書寫與差異》。</p>
+    <p>不對，其实是《現實主義的极限》。</p>
+    <p>也不对，其實是 <em>The Limits of Realism</em>。这个才对。這本書沒有中譯本，當然也沒有中文名。我純粹覺得翻成中文好像很酷。</p>
+    <p>禮貌上，加上我的习惯，是应该注明这本书的作者。但不知道為什麼我就是不太想要寫出來。我很喜歡這個作者，也跟沓通過好几次信。如果要找出這世上最了解我的人，沓一定要排在前三名。這本書里面的很多论证和洞見，为我原本许多杂乱无章的思绪安頓好了位置。好幾年來，我把这本书从头到尾不知道翻了多少遍，几乎每一回看都可以有新的发现。不管去到哪里都会随身携带。睡觉的时候此书一定要在我伸手可及之處。</p>
+    <p>或許是因為關係"特殊"，所以我才不想直接写出作者之名。无论如何，如今我的很多想法和論證都奠定在此書之上。如果不是這本書，我現在也不可能作博士研究。</p>
+    <p>说了这么多，其实很抱歉，我没有打算在这里介绍这本书的内容。我倒是想稍微漫談另外一本主题相关的书：Wittgenstein 的 <em>Tractatus Logico-Philosophicus</em>（以下简称 Tractatus）。中文譯名是《邏輯哲學論》。</p>
+    <p>试图想要了解哲学的人，大概都听说 Wittgenstein。試圖想要了解 Wittgenstein 的人，大概都有听过 Tractatus。</p>
+    <p>Wittgenstein 經常被譽為最重要最有影響力的哲學家之一（或没有之一）。在我看過沓的任何一個著作之前，早已透過閱讀別的文獻感受到沓的无处不在。就连去听物理课，教授还是会引用沓的话。</p>
+    <p>Wittgenstein 寫這本書的企圖心是很猛的。沓企图要透过这本书来處理不是几个哲学问题，而是所有的哲学问题。更准确地说，沓要消解所有哲学问题。</p>
+    <p>哲学问题当然是很煩人的问题。例如死后究竟有没有来生？这个问题的历史大概跟我们开始具有思考能力的歷史一樣久遠。一幅畫究竟美不美，是取決於主觀感受，還是有一個客觀標準？不可说谎，是一个绝对的无上律令、还是可以视情况而定？</p>
+    <p>这类问题——即哲学问题——好像一直没有圆满答案、一直处于争议之中。</p>
+    <p>Wittgenstein 認為，哲学问题之所以会出现，或者說，我們之所以被這些問題糾纏，是源自於我們對语言的误用。所以我們不是要為這些問題給出答案，而是從一開始就不該問這些問題。因为这些问题是没有意义的。問了，就是誤用了語言。</p>
+    <p>所以 Wittgenstein 开启了一个工程，就是必须提出一套准则，让我们可以借由这个准则去分辨，在什么情况下语言沒有被误用，什么情况下有。只要避免后者，我們就不再因為誤用語言而提出一些千年無解的問題。</p>
+    <p>我们都知道，语言是思想的载体。或者说，语言反映了我们的思想。当我们用语言说出 "7+5=91" 或者 "鮮豔的企業洶湧地入睡" 的时候，那一定是我们的思想出了什么问题。要刻划出语言何时被误用的準則，其实就是要刻划出支配思想的逻辑律則。</p>
+    <p>什么是逻辑？逻辑作为一门学科，是在研究我们如何思考，以及研究我们应该如何思考（后者尤其重要）。换个方式理解，我们可以问：规范我们思考的律則有哪些？找出這些律則就是邏輯學的工作。被發掘出來的律則就稱為邏輯律則（logical laws）。</p>
+    <p>就像物理學，物理是研究各种事物，例如太阳或电子，的运作。一旦找到这些事物运作的规律，我们就称为物理法则或律則（physical laws）。</p>
+    <p>所以，就像星体的运行受到物理律則的支配，思想則是受到邏輯律則的支配。所以我們不會認為 7+5 的結果是 91，也不會認為 "鮮豔的企業洶湧地入睡" 是一句有意义的句子。因為這些都違反了邏輯律則。只有當我們從 7+5 推導出 12 的时候，我们的思想才合乎逻辑律則。</p>
+    <p>既然思想受到了邏輯律則的支配，而語言負責反映或承載思想，那語言當然也受到了邏輯律則的支配。</p>
+    <p>這些邏輯律則，就什麼是可以思考的、以及什麼是可以言說的，劃定了邊界。用 Wittgenstein 的话说：哲學的工作是</p>
+    <blockquote>
+      <p class="lang">Tractatus</p>
+      <p>"it must set limits to what can be thought; and, in doing so, to what cannot be thought…"</p>
+      <p>"it will signify what cannot be said, by presenting clearly what can be said."</p>
+    </blockquote>
+    <p class="aside">（"presenting clearly what can be said"，在我看来，这很不适用于 Wittgenstein 自己的书写）</p>
+    <p>Wittgenstein 透过写 Tractatus 这本书企图指出，哲学问题一向无解，不是因为我们太笨，而是哲學問題本來就不是拿來回答的，而應該是要被消解的。因為這些問題都早已逾越了思考和言說的邊界。所以，任何跟哲学有关的探讨都是没有意义的，或更白话一点，都是胡思乱想胡说八道，我们应该做的就是停止探讨哲学。由此，透过划定思考和言说的边界，Wittgenstein 一举消解所有哲学问题。</p>
+    <p>当然，事情没有这么简单。在我看來，虽然说 Wittgenstein 的目标是要让所有的哲学家都失业，Tractatus 應該算是達到了反效果。此書證明了，哲學永遠不會被淘汰！</p>
+    <p class="aside">（當然這番話是建立在哲學家可以被當成一種職業的假設上）</p>
+    <p>為什麼沒有這麼簡單？因為 Tractatus 引發了很多別的問題。在此舉出兩個。第一個問題是 Wittgenstein 自己意识到的。Tractatus 的目标是要劃定思想和言說的邊界，而 Wittgenstein 说这就是哲学的工作。也就是说，Wittgenstein 会认为，Tractatus 就是一本談哲學的書，而沓自己正是在探讨哲学。那么套用 Wittgenstein 自己的观点，沓自己是在说一些没有意义的话吗？是在胡思乱想胡说八道嗎？Wittgenstein 自己说是。这本书的尾声，是一段自我指涉的陳述：</p>
+    <blockquote>
+      <p>"任何理解我的人最终会认知到我的這些论述是没有意义的（或胡思乱想胡说八道）。沓可以透过、就、翻越这些论述攀爬出來（可以说，一旦攀爬出來之後，沓必须丟掉這個梯子），沓必須超越這些論述，才能准确地领会这个世界。"</p>
+      <p class="lang">Original</p>
+      <p>"…anyone who understands me eventually recognizes them as nonsensical, when he has climbed out through them, on them, over them. (he must, so to speak, throw away the ladder after he has climbed up it.) he must transcend these propositions, and then he will see the world aright."</p>
+    </blockquote>
+    <p>結果，自 Tractatus 的问世起，哲学家不只没有失业，还多了一项工作。大部份哲學家當然沒有因為這番話，乖乖地把整本書當成胡說八道棄之不顧，而是去追究該怎麼去理解這本書。這段自我指涉的陳述更經常成為哲學家爭論的焦點。</p>
+    <p>諷刺的是，追究怎麼理解這本書，往往就必須追問：Wittgenstein 写这本书背后的真实想法是什么？可是追究这个问题其实不是在作哲学研究，而是在作诠释的研究。这不正好符合 Wittgenstein 的初衷吗？即不要作哲学！</p>
+    </article>
+    <article class="post" id="ineff-2" hidden>
+      <p class="eyebrow">不可言喻 · 二</p>
+      <h1 class="post__title">到達涅槃是一種什麼樣的狀態？<span class="sub">What is it like to reach nibbāna?</span></h1>
+      <p class="post__date" data-date-for="ineff-2"></p>
+      <p>在原始佛教的經典中有提到四種聖人：</p>
+    <blockquote>
+      <p class="lang">Pāli · 中譯</p>
+      <p>1. Stream enterer　2. Once-returner　3. Non-returner　4. Arahant</p>
+      <p>中文翻成：須陀洹、斯陀含、阿那含、阿羅漢</p>
+    </blockquote>
+    <p>是不是很古怪？为什么会这么翻？我不知道。</p>
+    <p>可能因为最早用来书写佛经的巴利文是：Sotāpanna, Sakadāgāmi, Anāgāmi, 和 Arahant。</p>
+    <p>中文的翻譯应该不是传达这些词的意思，而是传达这些词的读法。可是好像除了阿罗汉有对应到 Arahant 的念法之外，剩下的还是对不太上⋯⋯</p>
+    <p>近年開始常用的中文翻譯就很直接：入流者、一還者、不还者、阿罗汉。还有更直接的：初果、二果、三果、四果（也就是我们常听说的、甚至吃过的阿"罗汉果"）</p>
+    <p>其实，與其說是四種圣人，更准确地说，是涅槃的四个阶段。阿罗汉在涅槃的終點，用傳統的說法，就是已經超脫生死輪迴。Non-returner，则是不再轮回到人世间、或比人世间更煎熬的世界如鬼界或地狱界。Once-returner 还会再轮回到人世間最多一次。Stream enterer 还会再轮回到人世间好几次（流行的说法是七次）。</p>
+    <p>這四种圣人，按照傳統的說法，遲早都會成为阿罗汉、超脫生死輪迴、證悟涅槃。也就是说，其实你只要成为 Stream enterer，你迟早会"变成"阿罗汉。</p>
+    <p>认真修行的人都会关心自己现在是在哪一個階段。尤其是會關心，自己現在是不是 Stream enterer。那要怎么知道自己是不是 Stream enterer？</p>
+    <p>Stream enterer 还没有到达涅槃。有些經上會說，證得 Stream enterer 的人會出現法眼，然後"看到"涅槃。我有听说有人直接理解成就是双眼之间会再長一顆可以看到涅槃的眼睛！</p>
+    <p>还是回到经上的说法好了。經上說，证得 Stream enterer 的人会斷除三結：身見结、疑見结、戒禁取结。</p>
+    <p>断这三结的意思是，Stream enterer</p>
+    <ol>
+      <li>不再认为经验当中有任何事物可以被视为自我、或者可以被视为属于自我。</li>
+      <li>对于修習佛法可以導向滅苦不再有任何疑慮。</li>
+      <li>不再認為灭苦可以透過別的方法如仪式、诵经、驱魔、赶鬼、祈祷、結手印、買小房子等等來实现。</li>
+    </ol>
+    <p>稍微花点力气我们应该可以理解（2）跟（3）的关系。最难以理解的或许就是（1）了。这真的不是三言两语能够解释清楚的事。而且如果没有一点点打坐或修行的经验作为基础，可能更加不容易明白。直接說，如果靜靜坐下來注意一下自己的各種經驗，你找不到可以被稱為自我的元素。</p>
+    <p>當然，這樣說等於沒說。</p>
+    <p>这样说好了，在我们的经验当中，有感受、觉知、想法、情绪、意图、判断、信念等等。这些事物无时无刻在我们的经验当中浮现、消失、浮现、消失。佛陀解释说，我们的经验当中除了这些事物，沒有別的。而這些事物、或說心理狀態，一直浮現消失。自我却是不會浮現消失，而應該是持續存在的。那既然經驗當中只有這些只會浮現消失的事物，所以經驗當中沒有自我。</p>
+    <p>就是這樣。這好像很容易理解。但要徹底地理解，或许是另外一回事。這番徹底的理解會引發的效果，我會說，是天翻地覆的。</p>
+    <p>怎麼个天翻地覆法？</p>
+    <p>例如：可以超脫生死。</p>
+    <p class="aside">（我不會說超脫生死輪迴，因為我不知道有沒有輪迴）</p>
+    <p>对那番没有自我的解釋有徹底的理解的話，就可以超脫生死。</p>
+    <p>我這樣講，真的沒有瘋嗎？這有機會再慢慢分解好了。</p>
+    <p>值得一提的是，哲学家 David Hume 曾经也提过在經驗中找不到自我的说法。而且理由其實跟佛陀的解釋沒有实质的不同。</p>
+    </article>
+    <article class="post" id="ineff-3" hidden>
+      <p class="eyebrow">不可言喻 · 三</p>
+      <h1 class="post__title">颜色的对调</h1>
+      <p class="post__date" data-date-for="ineff-3"></p>
+      <p>高行健曾說："作家的创造性恰恰在⋯⋯语言说过了的地方方才开始，在这种语言尚未充分表述之处加以诉说。"</p>
+    <p>去表述那尚未被表述的事，如果這是文學的工作，那麼去發現根本無法表述的事，是哲學的工作嗎？</p>
+    <p>有沒有想過一种情况：你看到的青色會是另外一個人看到的红色，你看到的红色则是对方看到的青色？</p>
+    <p>我们要怎么知道实际上真的发生这种情況？</p>
+    <p>想象一下实际上真的出现颜色对调的情況（至少可以区分出两种颜色对调的情况，我在这里只讨论比较有趣的一种）。假设在绘画课上，老师要求我們画一颗表皮青色、果肉红色、被剖开的西瓜。但如果我看到的青色和紅色正好就跟你看到的青色和紅色對調，会发生什么事？</p>
+    <p>當老師說："用青色画西瓜的表皮。" 我跟你都用同样的颜料画西瓜的表皮；当老师说："用红色画西瓜的果肉。" 我跟你也用同样的颜料画西瓜的果肉。</p>
+    <p>因为我跟你看到的红色和青色對調，你看到的西瓜表皮的颜色，是我看到的西瓜果肉的颜色；我看到的西瓜表皮的顏色，是你看到的西瓜果肉的顏色。</p>
+    <p>但是，当老师要我们使用青色的时候，我跟你都会用同一种颜料；当老师问我们西瓜果肉是什么颜色的时候，我跟你都会回答"红色"。这似乎就表示，我们好像没有办法透过彼此的言行举止来发现我看到的颜色跟你看到的颜色其实是对调的。</p>
+    <p>如果实际上出现这种我跟你所看到的颜色对调的情况，我们好像没有办法知道。</p>
+    <p>唯一的辦法好像就是，当你看到西瓜皮的颜色的时候，我可以直接经验到你看到那个颜色的经验，这样我才可以知道原来你看到的西瓜皮的颜色跟我看到的是不一样的。也就是所谓的心灵感应。</p>
+    <p>因为我们似乎没有心灵感应，所以如果真的出現這種顏色對調的情況，那麼當我指著西瓜的果肉，然後對你說："這是紅色。"而你也同意我的判斷，但由于你不知道你看到的红色跟我看到的红色其实是不同的，这也就表示，"紅色"这个词汇没有办法将我看到红色的视觉经验完整地捕捉到、然后毫无失真地向你描述出来。更一般地说，我的主观经验有一些面向是无法用语言描述的。</p>
+    <p>哲学家 Ned Block 直接将主觀经验中所含有的无法用语言描述的面向称为"感质"。英文叫 "qualia"。（Ned Block 甚至认为，就算我们知道颜色对调的情况真的发生，我们的语言仍旧无法完整描述主观经验。但这部分就先不讨论了）</p>
+    <p>哲學家也很常拿痛覺、例如牙痛，作為說明感質的例子：即使我們都經歷過牙痛，也可以明白當一個人說沓牙痛是怎麼一回事——比如我們很可能會問沓："去看牙医了吗？"——但我们很可能也会同意，究竟牙痛是怎么个痛法，好像是只有自己才知道、而无法完整言传的主观经验。</p>
+    <p>我們知道被针刺和被灼伤都是痛觉。我们也知道这是两种不同的痛法。如果看到颜色的经验可能可以对调，那么感受疼痛的经验是不是也有可能可以对调？我被针刺的感觉，是你被灼伤的感觉，反之亦然，有没有这个可能？</p>
+    <p>颜色对调是局限在視覺經驗的對調。"感质对调"是更一般地指不同感官經驗的對調。</p>
+    <p>有的哲学家不认为存在任何事物或任何东西是语言无法描述的（凡存在必能被言说）。所以这类哲学家也就会反对在我们的经验当中存在着一些无法用语言描述的面向，也就会进一步反对有"感质"这种东西。而且，如果实际上有感质对调的情况，似乎就会迫使我们承认感質的存在，因此這类哲學家还會进一步否定實際上會出現感质對調的情況。</p>
+    <p>Wittgenstein 很有可能就會反对有颜色对调的情况。Wittgenstein 的哲学，经常被区分成前期哲学和后期哲学（这种区分是有争议的）。但无论是前期还是后期的 Wittgenstein，据我的理解，都主要在跟某种想法缠斗。这种想法就是：存在着一些事物，是不能被语言描述的。而前期跟后期 Wittgenstein 的主要差别在於，驳斥这个想法所采用的方法相当不同。（当然我的意思不是，这是 Wittgenstein 唯一关注的课题。但却是推动其哲學發展的重要課題。）</p>
+    <p>有趣的是，我们的一些关于颜色的视觉经验，似乎一直在糾纏着 Wittgenstein 无论是前期還是后期的哲學工作。例如 Wittgenstein 似乎就很难指出颜色对调的情况为什么肯定不会出现。Wittgenstein 若不能全面反駁顏色對調的可能性，就很難不去接受我們的經驗有不能透過語言描述的面向，即感質。</p>
+    <p>为什么要担心可能有一些事物不能用语言描述？一个稍微简化的理由是，如果我们说："有一些事物无法用语言描述"，我们不就正好已经在用言语描述这个事物了吗？</p>
+    <p>"有一些事物无法用语言描述" 是一句极度紧绷的句子。因为这个句子描述了无法用语言描述的事物，那究竟这个事物被语言描述了还是没有？我们似乎掉入了自我矛盾的漩涡。避免这种自我矛盾的发生，可以视为有的哲学家何以要否认有这种事物的主要动机。</p>
+    <p>所以我们还可以认为有颜色对调或感质对调的可能性吗？当我们承认有颜色对调的可能性，我们似乎就得承认感质的存在，也就进而承认存在着无法被语言描述的事物，这似乎无可避免地引发自我矛盾。我们可以在承认有颜色对调的可能性的同时避免自我矛盾吗？還是我們可以幫 Wittgenstein 找到很好的理由去否定感质对调的可能性？</p>
+    </article>
+    <article class="post" id="ineff-4" hidden>
+      <p class="eyebrow">不可言喻 · 四</p>
+      <h1 class="post__title">Let's upload our mind, and enjoy the ride</h1>
+      <p class="post__date" data-date-for="ineff-4"></p>
+      <p>自从 Chatgpt 的问世起，我就一直暗暗盼望，有生之年会进入到一個 Cyberpunk 的世界。</p>
+    <p>雖說 Chatgpt 没有我預期中的威力强大，甚至可说令人失望，但世上某些角落所開發的技術，却似乎很确实地逼近 Cyberpunk 里常出现的元素。</p>
+    <p>(1) 一个瘫痪三年的人，其脑部植入晶片后，可以再度控制自己的双手，并且可以再度產生已消失多年的觸覺。要恢复行走或许只是时间的问题而已。</p>
+    <p>(2) Virtual Reality（虚拟实境）的技术已经不局限于視覺和聽覺，而是扩展到触觉。原本，透过 Virtual Reality，使用者可以看到和听到没有亲自去过的实际所在（例如深海或太空）或完全虚构的世界（例如 Tannhäuser Gate 或 Laputa）。现在的技术还可以让使用者透过触觉来感受這些情境。</p>
+    <p>怎麼做到？一種做法是，由一個身形跟你差不多的機器人，让沓代替你去你要去的環境。你就在一個安全的地點遠端操控這個机器人。其肢体的运动方式则是依据你的肢体来摆动。你走沓就走、你跳沓就跳。你同时穿上一种可以刺激皮肤的装备。这样的话，那个环境会带给一个实际去到那里的个体什么样的感受，远端的机器人就会把这个訊息傳遞給這個裝備，這個裝備就會產生适当的刺激让你经历相对应的触觉。</p>
+    <p>如果是"去"一个虚构的世界，当然就连机器人替身都不需要。直接由某个程式指示这个装备产生事先设定好的刺激就好了。</p>
+    <p>这个机器人代替你去到一个环境，真的算是你自己亲身感受这个环境吗？以后，所谓的太空旅行，可以不可以是我在地球上操控一个机器人、由这个机器人代替我去到月球、火星，然后我不需要离开地球就可以感受到月球、火星的情境？</p>
+    <p>如果製作這個機器人的材料可以承受很極端、但卻不適合我的身体生存的環境，例如木星，那這個機器人替身如果去到木星，也算是我去到了木星吗？</p>
+    <p>(3) 我曾经无法理解将"自己的意识上载到云端或某个金属硬件"是什么意思。但這些技術似乎為這個說法提供了一些想像的現實基礎。</p>
+    <p>如果在脑部植入一些晶片可以恢复一些功能，那么意识可以至少在某种程度上由金属或半导体来实现或推动，这一种说法，就自此不是停留在科幻或假想，而是开始有一些现实基础了。</p>
+    <p>意识可以透过跟脑部或有机体全然不同的"东西"或"硬件"（例如半导体）来实现或推动，这一种主张在当代哲学上有一个专有的名称：意識的多重可实现性（Multiple Realizability）。</p>
+    <p>脑部植入晶片可以让我恢复一些功能。原则上当然也可以让我产生新的功能。比如让我远端操控一个机器人。到目前为止，我好像没有在说一些天馬行空的事，因为我只是根据现行技术稍微延伸一下而已。</p>
+    <p>那如果我说：既然我可以透过脑部的晶片来遥控一个机器人，在这个意义下，那我其实有两副身体，一副是有机的生物硬件、另一副则是金属／半导体硬件，在这个意义下，我的意识算是在这两副身体之间"游走"吗？如果装着脑部的身体死了，我的意识可以透过机器人这个硬件延续下去吗？那"將自己的意识上载到云端或某个金属硬件"不就具有现实的意义了吗？</p>
+    <p>答案若都是肯定，那就太好玩了！過往的科幻情節終於獲得現時科技的支持。Cyberpunk 的世界，距离我们真的不远！</p>
+    <p>做这些设想的过程中，我当然跳过了很多议题沒有處理。或许最重要的问题会是：推动或实现意识的重心究竟可不可以从脑部转移到半导体或金属的部位？</p>
+    <p>如果不可以，那这些设想就无法实现。</p>
+    <p>但更根本的问题是，上面这个问题已经预设了意识目前是被脑部给实现的。这个预设，是绝大大大部分的人、科学家、哲学家、甚至神学家都会同意的。</p>
+    <p>可是恰恰对于這一點，我是有疑慮的。稍微想一下，我们其实连"意识是被脑部给实现"都未必有明确的认知，當然就更加談不上什麼"实现意識的部位從這里轉移到那里"。如果会禅修的话，你可能会逐步开发出一种觀點：意识根本就没有在什么地方，也不被什么东西给实现。</p>
+    <p>"意识由某些事物实现或推动"、"意识并不由任何事物实现或推动"，這是兩個相互排斥的观点。我不會在這裡堅持哪一个观点才是正确的。我只想要強調，后面的这个观点可能可以在某种意义下是正确的（我承认我表达得非常保守）。</p>
+    <p>回到意识的转移上。如果"推動意識的部位的轉移"这个说法真的有意义、而且还有現實意義的話，那麼"輪迴"這個概念就沒有很玄了不是嗎？</p>
+    <p class="aside">（我要拥护一个很热闹的形上學）</p>
+    <p>回到上面远端操控机器人的例子。我说我操控两副身体，一副是装着头脑的生物有机体、另一副是由金属和半导体组成的机器人。假设在生物身体死去之前，我选择将自己的意识经常地"赖在"机器身体。然后有一天我忽然失忆了，忘了自己曾经有一副生物身体，所以我的意识就一直"在"机器身体。而那副生物身体最后则衰老死去。这种情况不就跟一般所知的佛教所说的"转世"很像吗？畢竟一般的佛教常宣称：我们有前世，只是不记得而已！</p>
+    <p>说来说去，我还是没有連到最近被接受刊登的拙作。嗯，勉強說跟意識是不是真的由腦部推動的課題有一点點点關係吧。</p>
+    </article>
+    <article class="post" id="self-1" hidden>
+      <p class="eyebrow">认识自己 · 其一</p>
+      <h1 class="post__title">金剛經 · 一切有為法</h1>
+      <p class="post__date" data-date-for="self-1"></p>
+      <p>金剛經里，有一段非常有名的話：</p>
+    <blockquote class="verse">
+      <p>一切有為法，如夢幻泡影，<br>如露亦如電，应作如是观。</p>
+    </blockquote>
+    <p>我对金刚经其实不熟（金刚经属于大乘佛教的经典）。我有记忆的部分，就仅限上面这段。真正该怎么理解这四句，我不知道。但从原始佛教的角度，要理解这四句还是有可能的。</p>
+    <p>这里面最容易明白的词大概就是"一切"，即"所有"的意思。</p>
+    <p>一切什么？一切 "有为法"，这大概是我们最不熟悉的词。"有为"是形容词，形容的是"法"。"法"的含义很多。"法"可以指"佛法"、"真相"、"现实"、"現象"、"思緒"、"念頭"、"經驗"、"涅槃"。</p>
+    <p>我们会发现，"法"所涵盖的事物很宽。簡單說，所有事物都是法。或许，用"现象"去理解"法"，最可以把上面列举的事物都涵盖进来。</p>
+    <p>从原始佛教的观点，现象可以分成两大类：</p>
+    <ol>
+      <li>依赖某些条件才会出现或成立的现象</li>
+      <li>无需依赖任何条件就成立的现象</li>
+    </ol>
+    <p>也就是說，法分成上面這兩大類。從原始佛教的觀點，只有涅槃，是不依賴任何條件就成立的現象，簡稱"無為法"。所有依賴某些條件才會出現或成立的現象，就稱為"有為法"。</p>
+    <p>具体来说，哪些东西是"有為法"？你喝過最好喝的咖啡、青春、愛情、健康、尊嚴、財富、和平、幸福、價值、爱、盼望、欲望、运气、对某人的信任、罪恶感、内疚感、恐惧感、悔意、对某人的憎恶、最美好的做爱经验、无助、彷徨、创伤、哀伤、烦恼、病痛、打羽球的能力、科學理論、某个主张、Fumika Baba、主义、立场、你的坚持、国家、自由、约束、對某個數學证明的掌握、Chatgpt、佛法、身躯、地球、神迹、太阳系、宇宙、世界、电子、Kundera 的小說、Nolan 的電影、禪定、我初吻的記憶、上帝给你的显现、你正在看這段文字的經驗、思绪等等，都是有為法。</p>
+    <p>简单说，除了涅槃之外，世上所有事物都是有为法。</p>
+    <p>一旦弄清楚"有為法"的意思，接下來就容易很多。先跳到最后一句：应作如是观。也就是，应该这样看待一切有为法。</p>
+    <p>怎样看待？把有为法当成像梦境、泡影、露水、闪电那样来看待。</p>
+    <p>这些事物的特征就是虚幻不真、瞬息万变、捉摸不定、短暂、难以预料、难以掌控。</p>
+    <p>"应作如是观"要说的就是：把一切有为法当成具有上面说的这些特征。</p>
+    <p>到这里我们要非常小心。究竟是要把金刚经说的这四句理解成：</p>
+    <ol>
+      <li>一切有为法都具有这些特征</li>
+    </ol>
+    <p>还是要理解成：</p>
+    <ol start="2">
+      <li>应把一切有为法当成具有这些特征？</li>
+    </ol>
+    <p>这是两种很不同的理解。</p>
+    <p>两种理解都允许吗？还是只限一种？我不清楚。但从佛法的观点，肯定是要采取第二种理解。第一种理解不是佛法在意、或提倡的理解方式。</p>
+    <p>应把一切有为法当成具有虚幻不真、瞬息万变、捉摸不定、短暂、难以预料、难以掌控的这些特征。面对具有这些特征的事物，我们会作什么样的反应？</p>
+    <p>可以说，几乎是不作任何反应。</p>
+    <p>如果要很认真地把有为法当成具有这些特征，就意味着，我几乎不会对有为法作任何反应。</p>
+    <p>这是可能的吗？我知道，这很难想象，更不用说要做到。但我会说，这是可能的。</p>
+    <p>我们可能还是可以对很多事物——即很多有为法——不作任何反应。</p>
+    <p>但是，我在上面举了这么多有为法的例子，我猜想，最难让我们不作任何反应的事物，会是思绪。</p>
+    <p>有可能，我们甚至很难理解，什么叫做"不对思绪作反应"。去理解这一点，以及实际做到这一点，是理解和实践佛法很核心很关键的一步。</p>
+    <p>要真的可以理解究竟什么是"不对思绪作反应"，一个人首先要培养起打坐，或用更"专业"一点的词，禅修的习惯。</p>
+    </article>
+    <article class="post" id="self-2" hidden>
+      <p class="eyebrow">认识自己 · 其二</p>
+      <h1 class="post__title">每个人有每个人的想法 ·「我不知道」</h1>
+      <p class="post__date" data-date-for="self-2"></p>
+      <p>（1）你是不是有说过这类的话："每个人有每个人的想法，不要把自己的想法套在别人身上"？</p>
+    <p>你在什么情况下会这么说？是不是你发现有人要把自己的想法套在别人身上，所以你才这么说？</p>
+    <p>那你有没有发现，当你这么说的时候，你也是在把自己的想法套在别人身上？</p>
+    <p>"每个人有每个人的想法"，不然呢？有人没有自己的想法吗？就算这个人的想法再平凡普通不过，那还是沓自己的想法。</p>
+    <p>"不要把自己的想法套在别人身上"，如果你真心认同这句话、真心要贯彻这句话的话，那就是不要把这句话讲出来，因为一旦讲出来，你就在试图把"不要把自己的想法套在别人身上"这个想法，套在别人身上，你的行为恰好抵触了这个想法。</p>
+    <p>或者温和一点的："每个人有每个人的想法，我们应该学会接受每个人的想法都不一样"。这句话说出来，格局好像很开阔。可是究竟意味着什么呢？就只是要对方意识到每个人的想法都不同吗？那几乎说了等于没说，因为这跟说"每个人有每个人的想法"没有什么不同。而且，那个会让你说出这句话的对象，多半早就知道这个基本事实了。</p>
+    <p>还是当你说："每个人有每个人的想法，我们应该学会接受每个人的想法都不一样"的时候，你其实要用一个客气婉转的方式表达出："不要把自己的想法套在别人身上"？是的话，那正如前面所解释的，你还是陷入自我抵触的困境。</p>
+    <p>（2）"每个人有每个人的想法，我们应该学会接受每个人的想法都不一样"。会说出这句话的人，我的观察是，通常是不想要为自己的想法辩护、或不知道要怎么为自己的想法辩护，而用这句话作防御机制。</p>
+    <p>我们不习惯自己的想法被挑战、我们更不习惯悬置自己的想法，然后去说："我不知道"。苏格拉底在几千年前就发现了这一点。</p>
+    <p>我出身天主教家庭，神父牧师我都遇过不少。除了欧阳文风之外，我没有遇过一个神父或牧师，在面对我的神学问题时会说："我不知道"。（"硬拗"，是无论天主教或新教神学的必修课吗？）</p>
+    <p>我遇过上座部佛教的出家人在面对我的佛教问题的时候说："我不知道"。就算钻研佛法数十年，仍有沓们不懂的部分，但沓们从一开始就没有打算要掩饰这一点，这种心态极其罕见，罕见到令我敬佩之余，还非常感动。</p>
+    <p>而且沓们修习和钻研佛法数十年，没有因为有一些自己不明白的部分而放弃佛法这套"思想"，当时我的反应就是，这套"思想"必有过人之处（对于这一点，现在我可以亲自向人保证了）。</p>
+    <p>当然不是所有出家人都愿意这么坦诚。出家人可以分成这两类：有看经的出家人跟没有看经的出家人。目前我遇到会说"我不知道"的出家人是有看经的出家人（也不是所有有看经的出家人会说"我不知道"）。</p>
+    <p>看经的人知道，经和自己的修为，是认识佛法的最后依据。如果这两者无法解开自己的疑惑，那就真的是不知道了。</p>
+    <p>不看经的出家人面对自己回答不出的问题，多半会说："你去修就是，不用讲酱多"。</p>
+    </article>
+    <article class="post" id="sutta-1" hidden>
+      <p class="eyebrow">读经札记 · 其一</p>
+      <h1 class="post__title">太初有道；道成肉身？</h1>
+      <p class="post__date" data-date-for="sutta-1"></p>
+      <p>世界的起源是什么？</p>
+    <p>这是许多宗教都很热衷的课题。（谁没有兴趣呢？）</p>
+    <p>反观佛教，几乎很少谈这个课题。要嘛就是我们常听到的佛陀对此类课题避而不谈、要嘛就说这世界是不断地周而复始而没有一个起点。</p>
+    <p>就是很少人提到这部佛經：相应部 12.49。</p>
+    <p>这部经对世界的起源有一个奇妙或玄妙的说法：世界源于无明。</p>
+    <p>那自然地，我們就要問：什麼是無明？</p>
+    <p>無明最常見的解釋是：对于苦、苦的起源、苦的熄灭、以及苦如何熄灭的无知。</p>
+    <p>这世界是因为我们不知道以上这四件事所以才出现的？</p>
+    <p>是的。这部经要说的就是这个世界正是因为我（们）不知道上面的四件事所以才出现。而且所谓世界就是我们知道的這個世界：有珠穆朗玛峰、Gemini、太陽系、有格陵蘭這塊冰、有為了信仰獻上生命的人、有被迫信仰而徬徨无助的人、有 Béla Tarr 光顾过的餐厅、有德黑兰街上残留的血迹、有我未曾服用過的 Ayahuasca、有各式各樣的事物，是这样的一个客观世界。</p>
+    <p>因为我的无明，这个世界才出现？</p>
+    <p>这真是一个离谱的说法。这个离谱的说法，也就是附文要解释的。</p>
+    <p>其实这就是佛法的高深之处。如果不离谱的话，佛法也没有什么特别了不是吗？</p>
+    <p>在这篇文章里，我没有直接论述世界源于无明，而是先论述世界源于信念。然后再论述信念和无明，追根究底，是同一回事。</p>
+    <p>但其实同样的想法，也不是只有在佛法中才找得到。</p>
+    <p>在维根斯坦的前期哲学，也可以找到同样的想法。这我就没有写进文章里，可能等下回吧。或者等其沓人。</p>
+    <p>我甚至有点把握说，在康德的哲学也可以找到同样的想法。</p>
+    <p>我自己没有很熟黑格尔或海德格。但我依稀感觉，好像也还在讲同一件事。</p>
+    <p>其实，"太初有道"，这是新约圣经约翰福音的第一句，不正是在说世界源于信念吗？</p>
+    <p>道，翻的是希腊文 Logos。这个字有理性、思考的意思。</p>
+    <p>思考和信念，在某个程度上是同样的事。</p>
+    <p>同样离谱的想法，竟然可以在各种不同的思路下出现。</p>
+    <p>我不否认，在某种程度上，我很可能是牽強附會。但這些相似之處好像也不該隨便打發掉。</p>
+    <p>佛法跟前期維根斯坦、甚至跟康德的相通，這一點，應該是毫無疑問。</p>
+    <p>至於佛陀還提出了"正念"的修行，這應該是超越後面兩個哲學家的不同之處。</p>
+    <p>就这样，折磨多年终于生出的文章。想说这是惊天动地的事。佛陀也是这么认为的，但沓够放得下，从一开始就打算躲进森林，没有打算公諸於世。</p>
+    <p class="source">延伸阅读 · <a href="https://philpapers.org/rec/LIMUDO" target="_blank" rel="noopener">philpapers.org/rec/LIMUDO</a></p>
+    </article>
+    <article class="post" id="sutta-2" hidden>
+      <p class="eyebrow">读经札记 · 其二</p>
+      <h1 class="post__title">相应部 25.11</h1>
+      <p class="post__date" data-date-for="sutta-2"></p>
+      <p>如是我闻，在舍卫城。</p>
+    <p>午饭后，佛陀向弟子阿难说："我入灭后三个月，那些对我的教导有透彻领会的弟子会聚集在一起，共有五百个，你会是其中之一。你们会把我说过的话整理成经，透过背诵传到世上各个角落。过一段时期，后人会将这些经写成文字。两千六百年后，后人又会上传到网上。"</p>
+    <p>阿难说："世尊，在这两千多年经文传开的过程中，我们怎么知道不会有人对经文进行增删、或者以世尊之名另行创作或虚构一些你从来没说过的话、做过的事呢？</p>
+    <p>"事实上，除了有原始佛经之外、也有所谓的高阶教法、或称阿比达磨，而且这些高阶教法还分不同派别；也有再后来的大乘经典。这些经记载的事迹或教导大部分已经跟原始佛经的内容远远不同了，而且这些经随着时间的演进只会出现更多不会更少。如此眼花缭乱，叫人不知所措。世人要怎么辨别哪些经才是真正记载着你的教导？"</p>
+    <p>佛陀说："没错。其实连原始佛经也未必记载着我的教导。</p>
+    <p>"例如中部 91 经，说的是我身上 32 个特征。其中包括我头上长了无数个肉瘤（那不是头发）；我的手臂特别长，站起来可以碰到膝盖；牙齿的长短全部都一样；我的舌头特别粗厚；我的包皮有特别形状等等。（说起来根据这部经，我的身体根本就是一个怪物的身体）。"</p>
+    <p>"在相应部 2.9 和 2.10，用我救了月神、日神来解释月食日食的现象。"</p>
+    <p>"在相应部 29，描述了龙出现在世上的四种方式。"</p>
+    <p>"在相应部 30，描述了凤凰出现在世上的四种方式。"</p>
+    <p>阿难："显然，有些经跟佛法无关。看经的人要怎么知道哪些经是有关佛法、哪些经无关从而可以摆一边去？"</p>
+    <p>佛陀："就连我们现在这番对话，如果被记载成文字，世人看了也可以怀疑这番对话是否真的曾经发生过。"</p>
+    <p>阿难："世尊，这已经是我第三次问了，我们到底要怎么辨别哪些经说的是佛法、哪些不是？"</p>
+    <p>佛陀浅浅地微笑："阿难，前两天我跟卡拉玛镇居民的对话，也就是增支部 3.65，你忘了吗？"</p>
+    <p>阿难："那些居民对于世间出现的各种互相排斥的信仰或世界观感到晕头转向、不知如何应对，就过来问你意见。你说：</p>
+    <blockquote>
+      <p class="lang">增支部 3.65</p>
+      <p>'各位，提出质疑、犹豫是合适的。來，各位，不要相信口耳相傳的傳誦，不要相信傳統，不要相信謠言，不要因經典的權威而相信，不要因推測而相信，不要因定理而相信，不要因似是真實的推理而相信，不要因深思熟慮的見解而相信，不要因他人擁有的能力而相信，不要因認為「這位比丘是我們的老師」而相信。'</p>
+    </blockquote>
+    <p>"你接着还说了别的，但我听到这里已经错乱了。世尊，你不也是我的老师吗？按照你的说法，我干嘛还要相信你？"</p>
+    <p>佛陀哈哈大笑："所以我说你根本没有把我的话听进去。我在经集的第四部——或称 Snp 4——或称 Aṭṭhakavagga——不就说的很清楚了吗？我的教导就是舍弃所有的信念。也唯有舍弃所有信念才能真正实现离苦的境界。但又有多少人真的能或敢贯彻这个教导呢？你是我最亲近的弟子不只做不到，还会选择性地遗忘我的教导，更何况是那些辗转获知我的教导的人，沓们都在各取所需、自行过滤掉自己不想接受的道理。</p>
+    <p>"'叶公好龙'这句成语，正好可以贴切地形容喜欢自稱是佛教徒的人。叶公老说喜欢龙。家里摆了一堆龙的雕刻、绘画。结果，天上的龍真的下来拜访，叶公卻又吓得魂飛魄散。自称是佛教徒的人遇到真正的佛法最终也会抗拒的。"</p>
+    <p>阿难小心翼翼地道："可是世尊，你也教了四圣谛、八正道，这些跟舍弃所有信念的教导好像完全不同吧？而且你还曾经说过佛法就像数学定理那样可以亲自证实，现在却似乎在暗示连关于数学的信念都要舍弃，可是可以被亲自证实的信念为什么还要舍弃呢？这是不是有矛盾？"</p>
+    <p>佛陀像是在回应阿难又好像不完全在回应阿难："别说可以被亲自证实的信念，就连无法被亲自证实的关于来生的信仰，人们都不愿摆脱。信仰之于人，正如水之于鱼那样，没有信仰，人是活不下去的。这就是为什么佛法传了几千年已经面目全非了——被各种教条、信仰、仪式包装。就连我的存在也一直不断地被神格化。"</p>
+    <p>"大家对我的法没有兴趣，只想要把原本清澈见底的事物蒙上一层那伴随着来生观的神秘感。唯有如此，人生的苦闷、不圆满似乎才可以得到某种弥补。因为人们可以把这份不圆满可以被弥补的盼望，寄托到那虚无缥缈不知要如何证实的来生世界。"</p>
+    <p>"于是，佛教徒没有比基督徒来得更不迷信、基督徒没有比拜民间信仰的来得更不迷信。简单说，自称是佛教徒的不懂佛法；懂佛法的知道佛法就像一颗洋葱，没有核心、没有教条、没有什么可以相信的。"</p>
+    <p class="source">原典 · <a href="https://suttacentral.net/sn25.11" target="_blank" rel="noopener">suttacentral.net/sn25.11</a></p>
+    </article>
+    <article class="post" id="sutta-3" hidden>
+      <p class="eyebrow">读经札记 · 其三</p>
+      <h1 class="post__title">爲什麽在《转法轮经》里，会提到"集谛"要被舍弃？</h1>
+      <p class="post__date" data-date-for="sutta-3"></p>
+      <p>《转法轮经》可能是上座部佛教中最有名的一部经。</p>
+    <p class="aside">（虽然再怎么出名，大概都不比《心经》有名）</p>
+    <p class="aside">（当然更有名的，是《圣经》）</p>
+    <p class="aside">（好，我比够了）</p>
+    <p>《转法轮经》绝对是一部很'好玩'的经、甚至是好笑的经。</p>
+    <p>据说，《转法轮经》是佛陀的"出道之作"。是佛陀悟道之后的第一部开示。这个开示的对象有五个人，其中一个听完之后就证了初果，也就是踏入朝向涅槃之路的第一个阶段。</p>
+    <p>这个开示的重点就是四圣谛。在佛教界，一般的想法是，如果四圣谛还不算是佛法的全部的话，那至少是佛法的基础了。</p>
+    <p>我个人认为，如果要把四聖諦當作佛法的一部分，那就必須当成是佛法的全部，而不只是基础而已。</p>
+    <p>那么四圣谛在说什么？可以理解成是在回答四个问题：</p>
+    <div class="qa">
+      <div>
+        <p class="q">一 · 苦谛：什么是苦？</p>
+        <p class="a">苦就是生老病死、怨憎会、爱别离、求不得——基本上就是，一个人经历的一切都是苦。</p>
+      </div>
+      <div>
+        <p class="q">二 · 集谛：苦的来源是什么？</p>
+        <p class="a">一个最经典的答案是贪嗔痴。</p>
+      </div>
+      <div>
+        <p class="q">三 · 灭谛：苦会不会灭？</p>
+        <p class="a">会。</p>
+      </div>
+      <div>
+        <p class="q">四 · 道谛：苦怎么灭？</p>
+        <p class="a">就是舍弃贪嗔痴。要透过修习八正道、一点一滴地逐步舍弃贪嗔痴。</p>
+      </div>
+    </div>
+    <p>对于集谛那个经典答案，我们可能熟悉到以至于错过了这里面大有文章。如果你觉得你知道什么是贪和嗔的话，那你说得上来什么是痴吗？</p>
+    <p>这其实是整个佛法最深邃的部分。这肯定是。想想看，苦有包括生老病死。所以，贪嗔痴是生老病死的来源。生病竟然是貪嗔癡造成的。爲什麽貪嗔癡的力量可以這麽强大？痴到底是什麽？</p>
+    <p>很多人會用輪回來解釋。用公式、打套路，説貪嗔癡是业。是上一世或上上一世累积的业造成這一世的生老病死。佛教的另外一个招牌教义不是无我吗？无我的话，那又是谁在累积业？</p>
+    <p>引入轮回，是在把原本已经很纠结的哲学，進一步推向剪不斷理還亂的局面。</p>
+    <p class="aside">（灭谛：会。有没有觉得这一谛很多余？）</p>
+    <p>舍弃贪嗔痴，就是舍弃苦的来源，也就是舍弃集。有趣的事情在这里，如果仔细看《转法轮经》的话，会发现经上其实不是说要舍弃'集'、而是要舍弃'集谛'。</p>
+    <blockquote>
+      <p class="lang">English</p>
+      <p>'This noble truth of the origin of suffering should be given up.'</p>
+      <p class="lang">中文</p>
+      <p>『這苦集聖諦應該被捨斷』</p>
+    </blockquote>
+    <p>舍弃'集谛'，难道这是在建议我们忽视四圣谛中的第二谛吗？这句话构成其中一个主因，让很多学者怀疑，这部经不是佛陀的原话，是后人的杜撰。而这句话真正的意思当然不是建议我们舍弃集谛，而是舍弃集，也就是捨棄苦的來源。</p>
+    <p>以前我第一次看这部经的时候，感觉哪里怪怪。也是后来经过别人指出才发现有这个问题。</p>
+    <p>个人的修行到一定阶段后，回头再想："是啊，本来就该舍弃。" 很快又觉得不对，因为修习佛法最终要舍弃的是整套佛法，不是集谛而已。</p>
+    <p>再更后来，才又想到，写这部经的人是不是故意跟读者开玩笑？作者其实知道是四谛都该被舍弃，却任意挑一谛说是这一谛该舍弃，因为沓知道，所谓四谛，其实都是同一件事。</p>
+    <p>会不会是这样？</p>
+    <p>四谛说来说去，其实是在讲同一件事。这我可以确认。至于这部经的作者是写错字、还是暗藏玄机，这在时光机发明之前，我看已经是不可考的了。</p>
+    <p>最后说两件好笑的事。这部经除了'记载'佛陀向这五个修行人宣说四圣谛外，还'记载'了别的事——惊天动地的事。在上座部佛教的宇宙观里，天分成很多层，各类众生就分住在不同天层。最靠近人间的天众生听到佛陀的教导后，就宣布：</p>
+    <blockquote>
+      <p>"⋯⋯這无上法轮已被世尊转动了，必將不被任何沙門、婆羅門、天、魔、梵，或世間中任何者反轉。"</p>
+    </blockquote>
+    <p>再上一层的天众生听到后，也跟着喊话：</p>
+    <blockquote>
+      <p>"⋯⋯這無上法輪已被世尊轉動了，必將不被任何沙門、婆羅門、天、魔、梵，或世間中任何者反轉。"</p>
+    </blockquote>
+    <p>同一句话，就这样一直不断地往上传。整个世界因此天动地摇。</p>
+    <p>这是不是真的，我不知道。无论是不是，我都觉得很好笑。</p>
+    <p>第二个好笑的事。当代一位重要的比丘 Ajahn Sumedho 说自己更愿意把佛陀跟一个叫 Upaka 的修行人的偶遇，当成是佛陀的第一次开示，而且以失败终场。</p>
+    <p>佛陀在去找那五个修行人的路上，Upaka 远看佛陀气定神闲、举手投足间都在显示这不是一般人，就上前去问佛陀沓的老师是谁？佛陀说：</p>
+    <blockquote>
+      <p>"我是征服一切者、已知一切者，在一切法上不沾污者，捨斷一切者、渴愛滅盡的解脫者，以自己的證智，我能指定誰為師呢？沒有我的老師，與我等同者未被發現，在包括天的世界中，沒有與我對等者⋯⋯"</p>
+    </blockquote>
+    <p>Upaka 的态度差不多就是：既然你都这么说了，那就祝你好运吧。</p>
+    <div class="callout">
+      <p class="lang">更正</p>
+      <p>之前我将第三谛灭谛说成是在回答这个问题：苦可不可以被灭？严格说来，第三谛应该是在回答这个问题：苦会不会灭？所以答案不是可以，而是会。如果你问：cheh，有什么不同？很大不同！</p>
+    </div>
+    <p class="source">原典 · <a href="https://suttacentral.net/sn56.11" target="_blank" rel="noopener">英译 (sujato)</a> · <a href="https://agama.buddhason.org/SN/SN1442.htm" target="_blank" rel="noopener">中译 (庄春江)</a></p>
+    </article>
+    <article class="post" id="sutta-4" hidden>
+      <p class="eyebrow">读经札记 · 其四</p>
+      <h1 class="post__title">第二支箭</h1>
+      <p class="post__date" data-date-for="sutta-4"></p>
+      <p>看佛經，从来都沒有让我产生一种"朝聞道，夕死可矣"的感受。更沒有"這段经文自此讓我明白我的整个人生在整個宇宙中的位置與終極目的"，这样的体悟。</p>
+    <p>看完经，最常出现的第一反应其实是："这部经到底在讲什么鸟话？"又或者，如果一部经看似浅显的话，我的反应就会是："这也值得拿出来提？"</p>
+    <p>我的意思不是佛经不值得看，而是佛经不容易看得懂。大部份的经，能在第一次就看懂的人，真的就是所谓有"慧根"。我认为，看大部份的经，首先会感到莫名其妙、充满困惑，非但不會感到喜悅、反而更加空虛，這才是第一次看完这些经最正常的反应。</p>
+    <p>我说的还不是像《心经》这种玄之又玄的经，什么色即是空，空即是色。对于完全没有佛学背景的人，根本不可能看懂这部经。我针对的还是比较平实的经。例如谈"两支箭"的经。</p>
+    <p>稍微对佛教有点认识的人，可能都听过这部谈两支箭的经。</p>
+    <p>佛陀在此经中将痛苦分成了两类：肉体的痛苦和心理的痛苦。佛陀说，病痛是肉体的痛苦，是常人和圣人都会经历的。而圣人（或已經解脫的人、或阿罗汉）不会因为病痛而难过哀嚎、心生抗拒。基於病痛而产生抗拒、难过哀嚎这类的反应就是心理的痛苦。也就是说，常人跟圣人，都会经历肉体的痛苦，但只有常人才会进一步经历心理的痛苦。</p>
+    <p>佛陀將肉體的痛苦比喻成第一支箭；将难过哀嚎或心生抗拒比作第二支箭。佛陀说，常人中了第一支箭之后，还会抗拒、难过哀嚎，这好比补上第二支箭，苦上加苦。聖人的不同之處就在於，聖人不會補上第二支箭，因此聖人只经历第一種苦。</p>
+    <p>有些人——例如附文——除了将第一支箭理解成病痛，也广义地理解成是任何逆境：或病痛、意外、天災人禍之類的事件。常人跟圣人同样都会经历这些事件。所不同的是，圣人不会因为经历了这些事而产生负面情绪如抗拒、悲痛苦恼、难过哀嚎等。</p>
+    <p>这个非常有名、被很多人捧为智慧之言的经，我在很长一段时间里都是一头雾水。如果我们老实的话，我们真的能够圆满地回答——而非硬掰——以下这些问题吗：</p>
+    <ol>
+      <li>我们真的可以将肉体的痛苦——也就是病痛——和心理的痛苦清楚地区分开来吗？难道病痛不也是心理的痛苦的一部份吗？</li>
+      <li>就算可以分得开来，佛教中所谓的灭苦原来就只是不起任何反应吗？苦不是我们常听说的生老病死吗？不起任何反应，跟脱离生老病死还有十万光年的距离吧？说佛教是消极的处世之道看来也不是空穴来风。而且如果老实一点的话，用"不作反应"来灭苦，虽然实际操作起来难度超高，但原理简单，实在也没有什么高深之处吧？难道佛教要传授给世人的就是这么简单的道理吗？</li>
+      <li>这是第二个问题的另一种提法：如果圣人就是成功灭苦的人，那么圣人只经历病痛却不起反应是什么意思？究竟圣人成功灭了病痛没有？如果没有，那圣人还是要经历病痛的苦不是吗？既然还要经历病痛的苦，那这还算是灭苦吗？（附文中的留言也传达类似想法）</li>
+      <li>经中到底有没有说过苦是生老病死？还是这只是广泛的迷思？我们的确可以在别的经中看到这样的叙述：苦就是生老病死。所以在这些经中，灭苦就包括灭生老病死。且不论这个"两支箭"的经提出了"不作反应"这种反高潮的灭苦之法，就说这两类经对于灭苦的理解差距甚大：不作反应和灭生老病死。这两种灭苦的理解，是不是有冲突呢？有的话，要怎么化解？或者说，不用化解？</li>
+    </ol>
+    <p>对于上面问题的典型回复，几乎一定是要诉诸轮回的。说穿了，这种回复都在自欺欺人。一来，会这么回复的人多半从没亲自证实是否真有轮回这一现象。再来，用輪迴解釋終究還是會碰上理解上的縫隙。解釋的人最後會說，輪迴過於複雜奧妙，沒有人可以全盤弄清楚。这可能会让听的人觉得佛教的确很高深。但這解釋了等於沒有解釋，而仅仅是故弄玄虛。</p>
+    <p>不诉诸轮回，当然还是可以解释上面的问题。而且也不会折損佛法的深度。这里只是要指出，不要輕易打發掉看经時会产生的任何一丝疑点。正视并追究这些疑点，才是理解佛法的必经之路。佛法毕竟经得起理性的推敲考验。而略过这些疑惑，不会让我们真的理解佛法，却会让我们产生理解佛法的幻觉。</p>
+    </article>
+    <article class="post" id="misc-1" hidden>
+      <p class="eyebrow">其他随笔 · 其一</p>
+      <h1 class="post__title">意識淺問</h1>
+      <p class="post__date" data-date-for="misc-1"></p>
+      <p>我们除了身體，還具有什麼？可能出现的答案會是：意識。</p>
+    <p>我很好奇，会不会有人认为：除了身體，我們並不具有意识？</p>
+    <p>其实这世上真有哲学家認為，我們沒有意识。</p>
+    <p>但更多人则认为，所谓意识，就是指頭腦而已。</p>
+    <p>意识是不是真的只是头脑呢？这不知道是不是每個人都曾經至少一閃而过会想到的问题？</p>
+    <p>我猜想，我們很可能拿不定主意，究竟這個問題的答案應該是什麼。首先，有的人的第一個反应可能会是：意识当然不是头脑。意识是身體以外的一個東西、是超越身體、凌駕身體的事物。</p>
+    <p>"超越身体、凌驾身体"是什么意思？我不确定。我猜想会这么讲的人要表达的至少是：就算身体死了、头脑烂了，意识還會繼續留存下去。</p>
+    <p>把意識和頭腦當成兩個非常不同東西的人，可能就要留意一下平常会不会这么讲："某某人做事没有經過大腦"、"我的腦海浮現出某個畫面"、"这个人的脑袋清晰"等等。就算自己不常用这些說法，可能聽到了也不會覺得很彆扭。</p>
+    <p>這就是我說的我們很可能拿不定主意識和头脑的关系。我们表现出来的很可能跟自己要主张的是有出入的。</p>
+    <p>那麼為什麼我們那麼習以為常上面那些將意識跟頭腦等同起來的說法呢？最直接的答案自然是，因為它們就是等同的！繞了一圈，我不就在說一個常識而已嗎？</p>
+    <p>或许。但常识未必是恒常的。我想到的是机器人。机器人也有意识当然不是什么新鲜的想法。很多人不當一回事，但我们却有必要越来越认真看待这个科幻常客。尤其近年，人工智能越来越火热、技术越來越精密，电脑或机器人是否有意识的问题，已經是一個越來越逼近現實的議題了。不少家庭现在都有掃地机，当你在观察扫地机的时候，有没有想过它可能是有意识的可能性？</p>
+    <p>许多科技公司試圖創造可以跟人類展開對話的電腦，最好可以做到讓我們辨別不了跟我們對話的另外一端究竟是不是真的是電腦，還是其實有個人類透过那台电脑跟我们对话。如果真的是一台电脑在跟我们展开通畅无阻的对话，而語言能力是具備意識的指標的話，那我们是不是要认真考虑电脑是不是也有意识？</p>
+    <p>電腦可以跟我們對話的技術，嚴格說來，已經不是科幻了（前些日子，Google 就有个职员认为公司设计出来的某个电脑或电脑软体具有意识）。而当我们开始認定某些電腦具有意識的那一刻起，就等於開始動搖或放棄意識等於頭腦的觀點。我們對於意識跟头脑的关系究竟是如何，再次摇摆不定。</p>
+    <p>有趣的是，最不能接受电脑有意识的人，往往同时是那些坚持意识也不等于头脑的人。简单说，这些人的想法就是，只有人类才有意识，但意识不等同于头脑。好，那我的問題就是：什麼是人類？人類跟電腦的不同是什麼？如果回應說，電腦是金屬做成的，人類不是，那我就會進一步問：人類身上就沒有金屬嗎？而且，電腦就一定要是金屬做成的嗎？電腦不可以透過基因工程做出來嗎？</p>
+    <p>上面那些都不是什麼很顛覆性的問題。早在七八十年代就有科幻電影和小说提出这些问题了，例如著名的銀翼殺手。科幻和越来越现实的科技一再挑战和模糊人類跟非人類之間的不同和界線、以及有意识的东西跟没有意识的东西之间的不同和界线。什麼东西有意識什麼沒有，这个问题的答案到最后很可能是很主观很任意的。电脑之父 Alan Turing 甚至说过，電腦究竟會不會思想是一個沒有意義的問題。</p>
+    <p>更极端地問，我又怎么知道除了我以外，还有别的事物是有意识的？我判別的準則是什麼？還是任意決定？</p>
+    <p class="aside">（本來想寫桶中腦，結果卻在談意識）</p>
+    </article>
+    <article class="post" id="misc-2" hidden>
+      <p class="eyebrow">其他随笔 · 其二</p>
+      <h1 class="post__title">观影随想<span class="sub">Oppenheimer · Anatomy of a Fall · A Separation</span></h1>
+      <p class="post__date" data-date-for="misc-2"></p>
+      <p class="aside">（几乎没有剧透）</p>
+    <p>出於種種原因，我看《Oppenheimer》已經是這部電影下映很多个月之后的事了。</p>
+    <p>其实我们可以想象得到，看 Christopher Nolan 近年的电影——尤其是《Tenet》和《Oppenheimer》——很多人会有這樣的經驗：在觀影的過程中放棄理解這部電影到底在講什麼。而且还可能會隐约伴随着一種困惑：我跟不上这部电影的剧情，這到底是我的问题、还是创作者的问题？</p>
+    <p>當然，在看《Oppenheimer》的過程中，我就已經有了答案。而這個答案在我看了 Justine Triet 的《Anatomy of a Fall》之后，就变得更加清晰、明确。</p>
+    <p>《Anatomy》的故事绝对稱得上簡單易懂、也相當平鋪直敘（熟悉 Nolan 的人就会知道，易懂的故事未必就是平铺直叙）。沒有实验性的成分、也几乎没有什么表现手法。</p>
+    <p>但正正因为风格极简，才让《Anatomy》可以更直接地透过演员们不留痕的演技（不用说，尤其是 Sandra Hüller），将人物內心的糾結，饱满地傳達給觀眾。</p>
+    <p>把剧情交代清楚，讓观众了解电影中的人物正在面臨什麼處境，進而明白这个处境带给这个人什么样的心境，再进一步对沓产生同情、或至少某種程度的共鸣。这看似对叙事电影的基本要求，但能不能滿足這一要求、以及怎麼滿足，其實就顯示了创作者的功力，并決定了這部電影的优劣。</p>
+    <p>无疑，Nolan 曾經是这方面的大师。但是到了《Oppenheimer》，不知道是不是为了寻求自我突破，沓就是不肯清楚踏實地交代一个故事：運用時空倒錯的手法來呈現一個高度複雜的歷史，這麼做給《Oppenheimer》增添的似乎不是深度，而是敘事上的混乱。紧凑的剧情以及被挤爆的訊息量，也让观众几乎没有什么喘息、沉澱的空間。</p>
+    <p>如果 Nolan 不想在处理历史上作一些取舍，那这应该是一部有分成两集、甚至三集的电影系列，而不是單獨的"史诗级"长片。</p>
+    <p>比起说故事，《Oppenheimer》更热衷于把電影的各种技術尽可能推向極致。《Anatomy》因为志不在此，就显得格外朴素。但也因此让我再次见证了写实创作的力量。这部电影的写实，让裡頭的人物與情節，跟我們靠得很近。人物每一次出现的选择及其背后的思考与内心挣扎，几乎都是我们可以理解可以感同身受的。每一个情节的推进几乎都在情理之中，绵密无缝。</p>
+    <p>看完《Anatomy》已经好几個星期了，直至打字的这一刻，我都還在消化這部電影所帶給我的冲击。除了回味电影的内容，也让我重新思考拍电影这回事、让我回想还有哪一部电影是類似的"乾貨"，老老實實地去說一個故事，沒有什麼花俏或表現的成份。</p>
+    <p>例如我想起了 2011 年的《A Separation》。《Anatomy》和《A Separation》这两部的气质很接近，但後者似乎还要略胜一筹。</p>
+    <p>前者刻意留给我们一个疑问：主角究竟是不是有话不说、隐瞒了什么？</p>
+    <p>后者则明顯要专门处理几个角色所面臨的，有话不能直说的压抑困境。或许因为《A Separation》的政治宗教背景跟我身处的环境类似，电影中每次出现的沉默或欲言又止，其撼動人心的力道是异常地深刻。</p>
+    <p>拍電影，或更一般地，藝術創作，往往不就是這回事嗎？即為失語的人發聲。尤其是要為基於政治壓迫而失語的人發聲。而在我所处的这个压抑国度，这类的题材更是取之不盡。我不至於要"醬爆"到去進行某種創作。但是對於已經在創作的人而言，這或許會是一個更加踏實和誠實地面對自身處境的創作方向。</p>
+    </article>
+    <article class="post" id="misc-3" hidden>
+      <p class="eyebrow">其他随笔 · 其三</p>
+      <h1 class="post__title">艱鉅的歷史究責</h1>
+      <p class="post__date" data-date-for="misc-3"></p>
+      <p>今年二月，波兰政府通过一项法案。此法案分成两个部分：禁止使用"波兰死亡集中营"等字眼来指称二战期间纳粹在波兰设立的集中营；以及禁止指控波兰民族是纳粹大屠杀或任何纳粹恶行的共犯。违者会受罚款或坐牢达三年。</p>
+    <p>尽管波兰常被视为二战的受害国，而非侵略国，但这项法案仍然受到强烈反对。以色列政府是反对声音的主要来源。相关人士认为，波兰人当中确实存在着纳粹的共谋者，而这项法案的推行是在迫使大家否定这项事实。</p>
+    <p>波兰人当中于二战期间存在着通敌者，这不足为奇。这只是在提醒我们，说波兰是受害国或德国是侵略国，原就过于简略。以民族作为敌人和盟友的单位来书写历史，几乎不可能还原历史的真相。</p>
+    <p>也许比较蹊跷的是，尽管以色列政府坚持波兰人当中有的曾经参与过二战的犯行，但我们似乎没听说过以色列政府澄清：德国人当中也有不曾参与过纳粹二战罪行的。相反地，直到 2010 年，以色列的财政部长仍基于纳粹曾经迫使犹太人从事苦役而要求德国赔偿高达十亿欧元。令人不禁怀疑，以色列政府在面对波兰新成立的法案以及在二战结束五十年后要求德国赔偿这两件事情上的态度是否一致。</p>
+    <p>其实，于 1970 年在犹太大屠杀纪念碑前下跪的西德总理 Willy Brandt，在二战时期就积极对抗纳粹。Brandt 固然不曾参与二战的犯行，但踏的下跪却吊诡地被解读成是代表全体德国人为二战道歉，这解读甚至形成历史共识而受到肯定。</p>
+    <p>不是每个波兰人都无须为二战负责，也不是每个德国人都得为二战负责。历史必须被诚实而严格地面对，所以追究历史罪责就得非常谨慎细致。要求全体民族为某项历史罪行负责，除了会模糊指认罪行的焦点之余，更是对不曾参与罪行的个体不公道。</p>
+    <p>秉持历史须诚实面对的态度，我们自不能容忍日本政府否认或淡化历史事实。这也赋予我们批评日本政府并要求踏们正视历史的正当性。但是，要求全体日本人为二战罪行负责，又岂是忠于历史的表现？偏偏很多人持有这类看法。诚实面对历史的态度若贯彻到底，我们就不应要求日本政府代表全体日本人为二战罪行负责、甚至道歉。</p>
+    </article>
+  </div>
+  <nav class="postnav" id="postnav" aria-label="上一篇 / 下一篇"></nav>
+</div>
+
+<footer>
+  <div class="footer__inner">
+    <span>© 2026 Abraham Lim</span>
+    <button type="button" id="copy">複製連結 · Copy link</button>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var ORDER = ["faith-1", "faith-2", "faith-3", "faith-4", "ineff-1", "ineff-2", "ineff-3", "ineff-4", "self-1", "self-2", "sutta-1", "sutta-2", "sutta-3", "sutta-4", "misc-1", "misc-2", "misc-3"];
+  var TITLES = {"faith-1": "宗教与科学是抵触的吗？", "faith-2": "如何为基督教教义辩护？", "faith-3": "傳說有一種東西叫快樂", "faith-4": "一神論的歷史包袱、佛法與畢氏定理", "ineff-1": "這景观，美得无法用言語形容", "ineff-2": "到達涅槃是一種什麼樣的狀態？ What is it like to reach nibbāna?", "ineff-3": "颜色的对调", "ineff-4": "Let's upload our mind, and enjoy the ride", "self-1": "金剛經 · 一切有為法", "self-2": "每个人有每个人的想法 ·「我不知道」", "sutta-1": "太初有道；道成肉身？", "sutta-2": "相应部 25.11", "sutta-3": "爲什麽在《转法轮经》里，会提到\"集谛\"要被舍弃？", "sutta-4": "第二支箭", "misc-1": "意識淺問", "misc-2": "观影随想 Oppenheimer · Anatomy of a Fall · A Separation", "misc-3": "艱鉅的歷史究責"};
+
+  /* Dates: fill in "id": "YYYY-MM-DD". Any post given a date is shown with it,
+     and the index re-sorts newest first once dates are present. */
+  var DATES = {};
+
+  var idx = document.getElementById('view-index');
+  var post = document.getElementById('view-post');
+  var bar = document.getElementById('topbar');
+  var nav = document.getElementById('postnav');
+  var bar_ = document.getElementById('progress');
+
+  function fmt(d){
+    var p = d.split('-');
+    if (p.length < 3) return d;
+    return p[0] + '.' + p[1] + '.' + p[2];
+  }
+
+  /* stamp dates wherever a slot exists */
+  Object.keys(DATES).forEach(function(id){
+    document.querySelectorAll('[data-date-for="' + id + '"]').forEach(function(el){
+      el.textContent = fmt(DATES[id]);
+    });
+  });
+
+  /* newest first, within each series, once dates exist */
+  if (!Object.keys(DATES).length) document.body.classList.add('no-dates');
+  if (Object.keys(DATES).length) {
+    document.querySelectorAll('.group__items').forEach(function(box){
+      var links = Array.prototype.slice.call(box.children);
+      links.sort(function(a, b){
+        var da = DATES[a.dataset.id], db = DATES[b.dataset.id];
+        if (da && db) return db.localeCompare(da);
+        if (da) return -1;
+        if (db) return 1;
+        return 0;
+      });
+      links.forEach(function(l){ box.appendChild(l); });
+    });
+    ORDER = [];
+    document.querySelectorAll('.post-link').forEach(function(l){ ORDER.push(l.dataset.id); });
+  }
+
+  function show(id){
+    var target = id && document.getElementById(id);
+    document.querySelectorAll('.post').forEach(function(a){ a.hidden = true; });
+    if (target && target.classList.contains('post')) {
+      target.hidden = false;
+      idx.hidden = true; post.hidden = false; bar.hidden = false;
+      document.title = TITLES[id] + ' · reflections on philosophy & the Dhamma';
+      var i = ORDER.indexOf(id), html = '';
+      if (i > 0) html += '<a href="#/' + ORDER[i-1] + '"><span class="lbl">← 上一篇 · Previous</span><span class="ttl">' + TITLES[ORDER[i-1]] + '</span></a>';
+      if (i > -1 && i < ORDER.length - 1) html += '<a href="#/' + ORDER[i+1] + '"><span class="lbl">下一篇 · Next →</span><span class="ttl">' + TITLES[ORDER[i+1]] + '</span></a>';
+      html += '<a href="#/"><span class="lbl">目录 · All essays</span></a>';
+      nav.innerHTML = html;
+    } else {
+      idx.hidden = false; post.hidden = true; bar.hidden = true;
+      document.title = 'reflections on philosophy & the Dhamma';
+    }
+    window.scrollTo(0, 0);
+  }
+
+  function route(){
+    var h = location.hash.replace(/^#\/?/, '');
+    show(h);
+  }
+  window.addEventListener('hashchange', route);
+  route();
+
+  function onScroll(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    bar_.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0).toFixed(2) + '%';
+  }
+  document.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  var btn = document.getElementById('copy');
+  btn.addEventListener('click', function(){
+    var done = function(ok){
+      btn.textContent = ok ? '已複製 · Copied' : '請手動複製網址';
+      setTimeout(function(){ btn.textContent = '複製連結 · Copy link'; }, 2200);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(location.href).then(function(){ done(true); }, function(){ done(false); });
+    } else { done(false); }
+  });
+})();
+</script>
+</body>
+</html>
