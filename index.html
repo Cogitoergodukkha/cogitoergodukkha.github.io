@@ -72,6 +72,7 @@ a{color:inherit}
   font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3);
 }
 .standfirst{margin:0;max-width:36em;color:var(--ink-2);font-size:1.02rem;line-height:1.85}
+.standfirst__en{display:block;margin-top:.5rem;font-style:italic;font-size:.9em;color:var(--ink-3);line-height:1.7}
 
 /* ---------- index ---------- */
 .index{max-width:52rem;margin:0 auto;padding:clamp(2.5rem,6vw,4rem) 1.5rem 5rem;display:grid;gap:3.5rem}
@@ -247,30 +248,61 @@ footer{border-top:1px solid var(--rule);padding:2.5rem 1.5rem 3.5rem}
 .footer__inner a:hover{color:var(--accent);border-color:var(--accent)}
 .hits{margin-left:1.2rem;color:var(--ink-3)}
 
-/* ---------- owner bar (only after visiting #/owner) ---------- */
+/* ---------- owner bar · only ever visible to you ---------- */
 .ownerbar{
   position:fixed;left:0;right:0;bottom:0;z-index:70;
-  display:flex;flex-wrap:wrap;gap:.5rem .7rem;align-items:center;
-  padding:.6rem .9rem;background:var(--panel);border-top:1px solid var(--rule);
+  display:grid;gap:.5rem;
+  padding:.7rem .9rem;background:var(--panel);
+  border-top:2px solid var(--accent);box-shadow:0 -8px 24px rgba(0,0,0,.10);
   font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.7rem;letter-spacing:.08em;color:var(--ink-3);
 }
+.ownerbar__row{display:flex;flex-wrap:wrap;gap:.45rem .7rem;align-items:center}
 .ownerbar button{
   font:inherit;color:var(--ink-2);background:transparent;
-  border:1px solid var(--rule);padding:.4rem .7rem;cursor:pointer;
-  transition:border-color .18s,color .18s;
+  border:1px solid var(--rule);padding:.42rem .75rem;cursor:pointer;
+  transition:border-color .18s,color .18s,background .18s;
 }
 .ownerbar button:hover{border-color:var(--accent);color:var(--accent)}
-.ownerbar button[disabled]{opacity:.45;cursor:default}
+.ownerbar button[disabled]{opacity:.4;cursor:default}
 .ownerbar button[disabled]:hover{border-color:var(--rule);color:var(--ink-2)}
-.ownerbar .tag{color:var(--accent);text-transform:uppercase;letter-spacing:.16em}
+.ownerbar button.primary{border-color:var(--accent);color:var(--accent)}
+.ownerbar button.primary:not([disabled]):hover{background:var(--accent);color:var(--paper)}
+.ownerbar .tag{color:var(--accent);text-transform:uppercase;letter-spacing:.18em}
 .ownerbar .spacer{flex:1 1 auto}
-.ownerbar .note{color:var(--ink-3)}
-body.is-owner{padding-bottom:3.5rem}
-body.is-editing [data-editable]{
-  outline:1px dashed var(--accent-2);outline-offset:.55rem;border-radius:2px;
+.ownerbar .note{color:var(--ink-3);letter-spacing:.04em;text-transform:none}
+.ownerbar .note.ok{color:var(--accent)}
+.ownerbar .note.bad{color:#B4523F}
+.ownerbar input{
+  font:inherit;color:var(--ink);background:var(--paper);
+  border:1px solid var(--rule);padding:.42rem .6rem;min-width:16rem;flex:0 1 22rem;
 }
-body.is-editing [data-editable]:focus{outline:2px solid var(--accent);outline-offset:.55rem}
+.ownerbar input:focus{outline:none;border-color:var(--accent)}
+body.is-owner{padding-bottom:9rem}
+@media (max-width:639px){ body.is-owner{padding-bottom:13rem} }
+
+/* the "back to editing" chip while previewing as a visitor */
+.previewchip{
+  position:fixed;right:1rem;bottom:1rem;z-index:70;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.7rem;letter-spacing:.1em;
+  color:var(--paper);background:var(--accent);border:0;padding:.6rem .9rem;cursor:pointer;
+  box-shadow:0 4px 16px rgba(0,0,0,.18);
+}
+
+/* what editing looks like: every block you can type in is outlined */
+body.is-editing [contenteditable]{
+  outline:1px dashed var(--accent-2);outline-offset:.35rem;border-radius:2px;
+  background:rgba(94,148,129,.07);
+}
+body.is-editing [contenteditable]:hover{background:rgba(94,148,129,.12)}
+body.is-editing [contenteditable]:focus{
+  outline:2px solid var(--accent);outline-offset:.35rem;background:rgba(94,148,129,.14);
+}
 body.is-editing .post-link{cursor:text}
+body.is-editing .post-link__thumb{pointer-events:none}
+.field{
+  border-bottom:1px dotted var(--rule);padding-bottom:.1rem;
+}
+body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(--accent-2)}
 </style>
 
 </head>
@@ -287,7 +319,7 @@ body.is-editing .post-link{cursor:text}
     <div class="masthead__inner">
       <p class="byline">Abraham Lim</p>
       <h1>reflections on reflections</h1>
-      <p class="standfirst">徹底的懷疑、原始佛教、語言的邊界，以及在相信與抗拒之間來回擺盪</p>
+      <p class="standfirst">在相信与抗拒之間擺盪、游走理性跟世界重叠的邊緣<span class="standfirst__en">Oscillating between Belief and Resistance, Wandering about the Boundaries where Reason and the World meet</span></p>
       <p class="masthead__nav"><a href="#/about">關於 · About</a></p>
     </div>
   </header>
@@ -1100,12 +1132,12 @@ body.is-editing .post-link{cursor:text}
     <article class="about" data-editable="about">
       <p class="eyebrow">關於 · About</p>
       <h1 class="post__title">Abraham Lim</h1>
-      <p>（在這裡寫幾句關於自己的話。點下面的「開始編輯」就可以直接改這一頁。）</p>
+      <p class="field">（點「開始編輯」，然後直接點這段字，就可以寫關於自己的話。）</p>
       <hr class="about__sep">
       <h2 class="about__h">聯絡 · Contact</h2>
       <ul>
-        <li><span class="contact__k">Email</span><span>（填上電郵）</span></li>
-        <li><span class="contact__k">Facebook</span><span>（填上連結）</span></li>
+        <li><span class="contact__k">Email</span><span class="field">（點這裡填上電郵）</span></li>
+        <li><span class="contact__k">Facebook</span><span class="field">（點這裡填上連結）</span></li>
       </ul>
     </article>
   </div>
@@ -1121,14 +1153,29 @@ body.is-editing .post-link{cursor:text}
 
 
 <div class="ownerbar" id="ownerbar" hidden>
-  <span class="tag">編輯模式</span>
-  <button type="button" id="ed-toggle">開始編輯</button>
-  <button type="button" id="ed-save">下載 index.html</button>
-  <button type="button" id="ed-reset">放棄修改</button>
-  <span class="note" id="ed-note"></span>
-  <span class="spacer"></span>
-  <button type="button" id="ed-off">離開編輯模式</button>
+  <div class="ownerbar__row">
+    <span class="tag">● 編輯模式</span>
+    <span class="note">這一列只有你看得到 · nobody else ever sees this</span>
+    <span class="spacer"></span>
+    <button type="button" id="ed-preview">以訪客身份預覽</button>
+    <button type="button" id="ed-off">離開編輯模式</button>
+  </div>
+  <div class="ownerbar__row">
+    <button type="button" id="ed-toggle" class="primary">開始編輯</button>
+    <button type="button" id="ed-publish">發佈到網站</button>
+    <button type="button" id="ed-save">下載 index.html</button>
+    <button type="button" id="ed-reset">放棄修改</button>
+    <span class="note" id="ed-note"></span>
+  </div>
+  <div class="ownerbar__row">
+    <label class="note" for="ed-token">GitHub 權杖</label>
+    <input type="password" id="ed-token" autocomplete="off" spellcheck="false" placeholder="github_pat_… 只存在這台電腦">
+    <button type="button" id="ed-token-save">記住</button>
+    <button type="button" id="ed-token-clear">忘記</button>
+    <span class="note" id="ed-tokstate"></span>
+  </div>
 </div>
+<button type="button" class="previewchip" id="previewchip" hidden>← 回到編輯模式</button>
 
 <script>
 (function(){
@@ -1143,7 +1190,7 @@ body.is-editing .post-link{cursor:text}
   var GOATCOUNTER = '';
 
   var SITE = 'reflections on reflections';
-  var K_OWNER = 'rr:owner', K_DRAFT = 'rr:draft';
+  var K_OWNER = 'rr:owner', K_DRAFT = 'rr:draft', K_TOKEN = 'rr:token';
 
   var idx   = document.getElementById('view-index');
   var post  = document.getElementById('view-post');
@@ -1159,7 +1206,20 @@ body.is-editing .post-link{cursor:text}
   function regions(){
     return Array.prototype.slice.call(document.querySelectorAll('[data-editable]'));
   }
-  regions().forEach(function(el){ ORIGINAL[el.getAttribute('data-editable')] = el.innerHTML; });
+  /* the markup of a region with every trace of the editor taken back out,
+     so that turning editing on does not by itself look like a change */
+  function cleanHtml(el){
+    var c = el.cloneNode(true);
+    c.querySelectorAll('[contenteditable]').forEach(function(x){
+      x.removeAttribute('contenteditable'); x.removeAttribute('spellcheck');
+    });
+    c.querySelectorAll('[data-href]').forEach(function(x){
+      x.setAttribute('href', x.getAttribute('data-href')); x.removeAttribute('data-href');
+    });
+    c.querySelectorAll('[draggable]').forEach(function(x){ x.removeAttribute('draggable'); });
+    return c.innerHTML;
+  }
+  regions().forEach(function(el){ ORIGINAL[el.getAttribute('data-editable')] = cleanHtml(el); });
 
   function readDraft(){
     var raw = ls(function(){ return localStorage.getItem(K_DRAFT); }, null);
@@ -1179,8 +1239,8 @@ body.is-editing .post-link{cursor:text}
   function saveDraft(){
     var d = {};
     regions().forEach(function(el){
-      var k = el.getAttribute('data-editable');
-      if (el.innerHTML !== ORIGINAL[k]) d[k] = el.innerHTML;
+      var k = el.getAttribute('data-editable'), cur = cleanHtml(el);
+      if (cur !== ORIGINAL[k]) d[k] = cur;
     });
     ls(function(){
       if (Object.keys(d).length) localStorage.setItem(K_DRAFT, JSON.stringify(d));
@@ -1295,55 +1355,107 @@ body.is-editing .post-link{cursor:text}
     } else { done(false); }
   });
 
-  /* ---------------- owner mode ---------------- */
-  var obar   = document.getElementById('ownerbar');
-  var bToggle= document.getElementById('ed-toggle');
-  var bSave  = document.getElementById('ed-save');
-  var bReset = document.getElementById('ed-reset');
-  var bOff   = document.getElementById('ed-off');
-  var noteEl = document.getElementById('ed-note');
-  var editing = false;
+  /* ================= owner mode =================
+     Everything below only ever runs for you: it is switched on by
+     visiting #/owner once in a browser, and that flag lives in this
+     browser's localStorage. None of it is baked into what a visitor
+     loads, so a reader can never see or use any of it. */
+  var obar    = document.getElementById('ownerbar');
+  var chip    = document.getElementById('previewchip');
+  var bToggle = document.getElementById('ed-toggle');
+  var bPub    = document.getElementById('ed-publish');
+  var bSave   = document.getElementById('ed-save');
+  var bReset  = document.getElementById('ed-reset');
+  var bPrev   = document.getElementById('ed-preview');
+  var bOff    = document.getElementById('ed-off');
+  var noteEl  = document.getElementById('ed-note');
+  var tokIn   = document.getElementById('ed-token');
+  var tokState= document.getElementById('ed-tokstate');
+  var editing = false, previewing = false, busy = false;
 
   function isOwner(){ return ls(function(){ return localStorage.getItem(K_OWNER) === '1'; }, false); }
+  function token(){ return ls(function(){ return localStorage.getItem(K_TOKEN) || ''; }, ''); }
+
   function setOwner(on){
     ls(function(){
       if (on) { localStorage.setItem(K_OWNER, '1'); localStorage.setItem('skipgc', 't'); }
       else    { localStorage.removeItem(K_OWNER); localStorage.removeItem('skipgc'); }
     });
-    if (!on) setEditing(false);
+    if (!on) { setEditing(false); previewing = false; }
     applyOwner();
   }
+
   function applyOwner(){
     var on = isOwner();
-    obar.hidden = !on;
-    document.body.classList.toggle('is-owner', on);
+    obar.hidden = !on || previewing;
+    chip.hidden = !on || !previewing;
+    document.body.classList.toggle('is-owner', on && !previewing);
+    if (on) say(tokState, token() ? '已記住' : '未設定');
     note();
   }
-  function note(){
+
+  function say(el, txt, kind){
+    el.textContent = txt;
+    el.className = 'note' + (kind ? ' ' + kind : '');
+  }
+
+  function note(msg, kind){
     var n = draftCount();
-    noteEl.textContent = n ? ('有 ' + n + ' 處修改尚未下載') : '沒有未下載的修改';
-    bSave.disabled = !n;
-    bReset.disabled = !n;
+    if (msg) say(noteEl, msg, kind);
+    else say(noteEl, n ? ('有 ' + n + ' 處修改還沒發佈') : '目前跟線上的版本一樣');
+    bSave.disabled = busy || !n;
+    bReset.disabled = busy || !n;
+    bPub.disabled = busy || !n;
+  }
+
+  /* ---- editing ----
+     Each paragraph is made editable on its own rather than the whole
+     article, so that select-all-then-type can only ever cost you the
+     one block you are standing in. */
+  var BLOCKS = 'p, h1, h2, figcaption, li, .field, .post-link__title, .post-link__excerpt';
+  function blocks(){
+    var seen = [];
+    regions().forEach(function(r){
+      r.querySelectorAll(BLOCKS).forEach(function(el){
+        if (el.querySelector(BLOCKS)) return;        /* keep the innermost block */
+        if (seen.indexOf(el) < 0) seen.push(el);
+      });
+    });
+    return seen;
   }
 
   function setEditing(on){
     editing = on;
     document.body.classList.toggle('is-editing', on);
-    regions().forEach(function(el){
+    blocks().forEach(function(el){
       if (on) { el.setAttribute('contenteditable', 'true'); el.setAttribute('spellcheck', 'false'); }
       else    { el.removeAttribute('contenteditable'); el.removeAttribute('spellcheck'); }
     });
+    /* an <a> swallows clicks and drags its own text, so while you are
+       typing the index links are parked as plain elements */
+    document.querySelectorAll('.post-link').forEach(function(a){
+      if (on) {
+        if (a.hasAttribute('href')) { a.setAttribute('data-href', a.getAttribute('href')); a.removeAttribute('href'); }
+        a.setAttribute('draggable', 'false');
+      } else if (a.hasAttribute('data-href')) {
+        a.setAttribute('href', a.getAttribute('data-href'));
+        a.removeAttribute('data-href'); a.removeAttribute('draggable');
+      }
+    });
     bToggle.textContent = on ? '停止編輯' : '開始編輯';
-    if (!on) { saveDraft(); readPosts(); }
+    bToggle.classList.toggle('primary', !on);
+    if (on) note('直接點任何一段文字就可以改', 'ok');
+    else { saveDraft(); readPosts(); }
   }
 
   bToggle.addEventListener('click', function(){ setEditing(!editing); });
   bOff.addEventListener('click', function(){ setOwner(false); });
+  bPrev.addEventListener('click', function(){ setEditing(false); previewing = true; applyOwner(); });
+  chip.addEventListener('click', function(){ previewing = false; applyOwner(); });
 
-  /* keep links from navigating while you are typing in them */
   document.addEventListener('click', function(e){
     if (!editing) return;
-    var a = e.target.closest && e.target.closest('.post-link, .about a');
+    var a = e.target.closest && e.target.closest('a');
     if (a) e.preventDefault();
   }, true);
 
@@ -1352,18 +1464,32 @@ body.is-editing .post-link{cursor:text}
     if (!editing) return;
     if (!(e.target.closest && e.target.closest('[data-editable]'))) return;
     clearTimeout(timer);
-    timer = setTimeout(saveDraft, 400);
+    timer = setTimeout(function(){ saveDraft(); }, 400);
   });
 
   bReset.addEventListener('click', function(){
-    if (!window.confirm('放棄所有未下載的修改，回到目前線上的版本？')) return;
+    if (!window.confirm('放棄所有還沒發佈的修改，回到目前線上的版本？')) return;
     ls(function(){ localStorage.removeItem(K_DRAFT); });
     regions().forEach(function(el){ el.innerHTML = ORIGINAL[el.getAttribute('data-editable')]; });
     setEditing(false);
     readPosts(); route(); note();
   });
 
-  /* ---------------- download the edited page ---------------- */
+  /* ---- the token, kept in this browser only ---- */
+  document.getElementById('ed-token-save').addEventListener('click', function(){
+    var v = tokIn.value.trim();
+    if (!v) { say(tokState, '先貼上權杖', 'bad'); return; }
+    ls(function(){ localStorage.setItem(K_TOKEN, v); });
+    tokIn.value = '';
+    say(tokState, '已記住', 'ok');
+  });
+  document.getElementById('ed-token-clear').addEventListener('click', function(){
+    ls(function(){ localStorage.removeItem(K_TOKEN); });
+    tokIn.value = '';
+    say(tokState, '已忘記', 'ok');
+  });
+
+  /* ---- writing the page back out ---- */
   function buildHtml(){
     var doc = document.documentElement.cloneNode(true);
     var q  = function(s){ return doc.querySelector(s); };
@@ -1375,6 +1501,7 @@ body.is-editing .post-link{cursor:text}
     q('#view-about').setAttribute('hidden', '');
     q('#topbar').setAttribute('hidden', '');
     q('#ownerbar').setAttribute('hidden', '');
+    q('#previewchip').setAttribute('hidden', '');
     q('#progress').removeAttribute('style');
     q('#postnav').innerHTML = '';
     var hits = q('#hits'); hits.setAttribute('hidden', ''); hits.textContent = '';
@@ -1383,9 +1510,17 @@ body.is-editing .post-link{cursor:text}
     qa('[contenteditable]').forEach(function(el){
       el.removeAttribute('contenteditable'); el.removeAttribute('spellcheck');
     });
+    qa('.post-link[data-href]').forEach(function(a){
+      a.setAttribute('href', a.getAttribute('data-href'));
+      a.removeAttribute('data-href');
+    });
+    qa('[draggable]').forEach(function(el){ el.removeAttribute('draggable'); });
     qa('[disabled]').forEach(function(el){ el.removeAttribute('disabled'); });
     q('#ed-toggle').textContent = '開始編輯';
-    q('#ed-note').textContent = '';
+    q('#ed-note').textContent = ''; q('#ed-note').className = 'note';
+    q('#ed-tokstate').textContent = ''; q('#ed-tokstate').className = 'note';
+    /* the token is never written into the page */
+    var tk = q('#ed-token'); if (tk) { tk.value = ''; tk.removeAttribute('value'); }
     doc.querySelector('body').className = '';
     return '<!doctype html>\n' + doc.outerHTML + '\n';
   }
@@ -1397,6 +1532,69 @@ body.is-editing .post-link{cursor:text}
     a.href = url; a.download = 'index.html';
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+  });
+
+  /* ---- publishing straight to the repository ---- */
+  function b64utf8(str){
+    var bytes = new TextEncoder().encode(str), bin = '', CH = 0x8000;
+    for (var i = 0; i < bytes.length; i += CH) {
+      bin += String.fromCharCode.apply(null, bytes.subarray(i, i + CH));
+    }
+    return btoa(bin);
+  }
+
+  function repoApi(){
+    var host = location.hostname;
+    if (!/\.github\.io$/.test(host)) return null;
+    return 'https://api.github.com/repos/' + host.split('.')[0] + '/' + host + '/contents/index.html';
+  }
+
+  bPub.addEventListener('click', function(){
+    var api = repoApi();
+    if (!api) { note('只能在 github.io 的網址上發佈', 'bad'); return; }
+    var tk = token();
+    if (!tk) { note('先在下面貼上 GitHub 權杖，然後按「記住」', 'bad'); return; }
+
+    var body = buildHtml();
+    var headers = {
+      'Authorization': 'Bearer ' + tk,
+      'Accept': 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28'
+    };
+    busy = true; note('發佈中⋯', 'ok');
+
+    fetch(api + '?ref=main', {headers: headers})
+      .then(function(r){
+        if (r.ok) return r.json();
+        throw new Error('讀取失敗 ' + r.status +
+          (r.status === 401 ? '（權杖無效或過期）' :
+           r.status === 404 ? '（權杖沒有這個 repo 的權限）' : ''));
+      })
+      .then(function(cur){
+        return fetch(api, {
+          method: 'PUT', headers: headers,
+          body: JSON.stringify({
+            message: 'Edit from the site · ' + new Date().toISOString().slice(0, 16).replace('T', ' '),
+            content: b64utf8(body),
+            sha: cur.sha,
+            branch: 'main'
+          })
+        });
+      })
+      .then(function(r){
+        return r.json().then(function(j){
+          if (!r.ok) throw new Error((j && j.message) || ('發佈失敗 ' + r.status));
+          return j;
+        });
+      })
+      .then(function(){
+        regions().forEach(function(el){ ORIGINAL[el.getAttribute('data-editable')] = cleanHtml(el); });
+        ls(function(){ localStorage.removeItem(K_DRAFT); });
+        busy = false; note('已發佈 · GitHub Pages 約一分鐘後更新', 'ok');
+      })
+      .catch(function(err){
+        busy = false; note(String(err.message || err), 'bad');
+      });
   });
 
   /* ---------------- visitor counter ---------------- */
