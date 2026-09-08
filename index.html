@@ -249,6 +249,21 @@ footer{border-top:1px solid var(--rule);padding:2.5rem 1.5rem 3.5rem}
 .footer__inner a:hover{color:var(--accent);border-color:var(--accent)}
 .hits{margin-left:1.2rem;color:var(--ink-3)}
 
+/* ---------- comments ---------- */
+.comments{
+  max-width:var(--measure);margin:0 auto;padding:1.8rem 1.5rem 2.5rem;
+  border-top:1px solid var(--rule-2);
+}
+.comments__h{
+  margin:0 0 1.2rem;font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:.68rem;letter-spacing:.18em;color:var(--ink-3);text-transform:uppercase;font-weight:400;
+}
+.comments__note{
+  margin:0;font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:.7rem;letter-spacing:.06em;color:var(--ink-3);line-height:1.7;
+}
+#cusdis_thread iframe{width:100%!important;border:0}
+
 /* ---------- owner bar · only ever visible to you ---------- */
 .ownerbar{
   position:fixed;left:0;right:0;bottom:0;z-index:70;
@@ -1127,6 +1142,11 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
     <p>就像我们坚持守護的价值那样。</p>
     </article>
   </div>
+  <section class="comments" id="comments" hidden>
+    <h2 class="comments__h">留言 · Comments</h2>
+    <div id="cusdis_thread"></div>
+    <p class="comments__note" id="comments-note" hidden></p>
+  </section>
   <nav class="postnav" id="postnav" aria-label="上一篇 / 下一篇"></nav>
 </div>
 
@@ -1191,6 +1211,16 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
      in the browser you read from.
      ----------------------------------------------------------------- */
   var GOATCOUNTER = 'cogitoergodukkha';
+
+  /* -----------------------------------------------------------------
+     留言 · Comments (Cusdis)
+     Sign up at cusdis.com, add this site, and paste the App ID here.
+     Readers need no account: a name and a comment is all. Nothing is
+     shown on the page until you approve it. While this is empty no
+     comment box appears and nothing is loaded.
+     ----------------------------------------------------------------- */
+  var CUSDIS_APP_ID = '';
+  var CUSDIS_HOST   = 'https://cusdis.com';
 
   function siteName(){
     var h = document.querySelector('.masthead h1');
@@ -1337,6 +1367,7 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
     if (id === 'about') {
       about.hidden = false; bar.hidden = false;
       retitle();
+      mountComments(null);
       window.scrollTo(0, 0);
       return;
     }
@@ -1353,6 +1384,7 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
       idx.hidden = false;
       retitle();
     }
+    mountComments(id);
     window.scrollTo(0, 0);
   }
 
@@ -1536,6 +1568,18 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
     q('#progress').removeAttribute('style');
     q('#postnav').innerHTML = '';
     var hits = q('#hits'); hits.setAttribute('hidden', ''); hits.textContent = '';
+    /* anything the page loaded at runtime: analytics, the comment widget */
+    qa('[data-injected]').forEach(function(el){ el.parentNode.removeChild(el); });
+    var thread = q('#cusdis_thread');
+    if (thread) {
+      thread.innerHTML = '';
+      Array.prototype.slice.call(thread.attributes).forEach(function(a){
+        if (a.name !== 'id') thread.removeAttribute(a.name);
+      });
+    }
+    q('#comments').setAttribute('hidden', '');
+    var cnote = q('#comments-note');
+    cnote.setAttribute('hidden', ''); cnote.textContent = '';
     q('#copy').textContent = '複製連結 · Copy link';
     var t = q('title'); if (t) t.textContent = siteName();
     qa('[contenteditable]').forEach(function(el){
@@ -1628,6 +1672,85 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
       });
   });
 
+  /* ---------------- comments ---------------- */
+  var cusdisAsked = false;
+
+  function themeNow(){
+    var t = document.documentElement.getAttribute('data-theme');
+    if (t === 'dark' || t === 'light') return t;
+    return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
+      ? 'dark' : 'light';
+  }
+
+  function commentsNote(txt, ownerOnly){
+    var el = document.getElementById('comments-note');
+    if (!txt || (ownerOnly && !isOwner())) { el.hidden = true; el.textContent = ''; return; }
+    el.textContent = txt; el.hidden = false;
+  }
+
+  function drawCusdis(host){
+    var C = window.CUSDIS;
+    if (!C) return false;
+    try {
+      if (typeof C.renderTo === 'function') { C.renderTo(host); return true; }
+      if (typeof C.initial === 'function') { C.initial(); return true; }
+    } catch (e) {}
+    return false;
+  }
+
+  function loadCusdis(){
+    if (cusdisAsked) return;
+    cusdisAsked = true;
+    var s = document.createElement('script');
+    s.async = true; s.defer = true;
+    s.setAttribute('data-injected', '');   /* stripped before publishing */
+    s.src = CUSDIS_HOST + '/js/cusdis.es.js';
+    s.onerror = function(){ commentsNote('留言暫時無法載入 · comments could not load'); };
+    document.body.appendChild(s);
+  }
+
+  /* one thread per essay, keyed on the essay id rather than the URL,
+     because every essay lives at the same address behind a #/hash */
+  function mountComments(id){
+    var box  = document.getElementById('comments');
+    var host = document.getElementById('cusdis_thread');
+    var isPost = !!(id && TITLES[id]);
+
+    if (!isPost) { box.hidden = true; return; }
+    if (!CUSDIS_APP_ID) {
+      box.hidden = !isOwner();
+      host.innerHTML = '';
+      commentsNote('留言功能未設定 · paste your Cusdis App ID into the page', true);
+      return;
+    }
+
+    box.hidden = false;
+    commentsNote('');
+    host.innerHTML = '';
+    host.setAttribute('data-host', CUSDIS_HOST);
+    host.setAttribute('data-app-id', CUSDIS_APP_ID);
+    host.setAttribute('data-page-id', id);
+    host.setAttribute('data-page-title', TITLES[id] || id);
+    host.setAttribute('data-page-url', location.origin + location.pathname + '#/' + id);
+    host.setAttribute('data-theme', themeNow());
+
+    if (!drawCusdis(host)) loadCusdis();
+  }
+
+  /* follow the reader's light/dark setting */
+  if (window.matchMedia) {
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    var onScheme = function(){
+      var t = themeNow(), host = document.getElementById('cusdis_thread');
+      if (host) host.setAttribute('data-theme', t);
+      if (window.CUSDIS && typeof window.CUSDIS.setTheme === 'function') {
+        try { window.CUSDIS.setTheme(t); } catch (e) {}
+      }
+    };
+    if (mq.addEventListener) mq.addEventListener('change', onScheme);
+    else if (mq.addListener) mq.addListener(onScheme);
+  }
+
   /* ---------------- visitor counter ---------------- */
   function initCounter(){
     var el = document.getElementById('hits');
@@ -1639,6 +1762,7 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
     var s = document.createElement('script');
     s.async = true;
     s.setAttribute('data-goatcounter', base + '/count');
+    s.setAttribute('data-injected', '');   /* stripped before publishing */
     s.src = 'https://gc.zgo.at/count.js';
     document.body.appendChild(s);
 
