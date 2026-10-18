@@ -262,7 +262,7 @@ footer{border-top:1px solid var(--rule);padding:2.5rem 1.5rem 3.5rem}
   margin:0;font-family:"IBM Plex Mono",ui-monospace,monospace;
   font-size:.7rem;letter-spacing:.06em;color:var(--ink-3);line-height:1.7;
 }
-#cusdis_thread iframe{width:100%!important;border:0}
+#disqus_thread iframe{width:100%!important;border:0}
 
 /* ---------- owner bar · only ever visible to you ---------- */
 .ownerbar{
@@ -322,7 +322,7 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
 </style>
 
 </head>
-<body data-goatcounter="cogitoergodukkha" data-cusdis="">
+<body data-goatcounter="cogitoergodukkha" data-disqus="">
 <div id="progress" aria-hidden="true"></div>
 
 <div class="topbar" id="topbar" hidden>
@@ -1144,7 +1144,7 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
   </div>
   <section class="comments" id="comments" hidden>
     <h2 class="comments__h">留言 · Comments</h2>
-    <div id="cusdis_thread"></div>
+    <div id="disqus_thread"></div>
     <p class="comments__note" id="comments-note" hidden></p>
   </section>
   <nav class="postnav" id="postnav" aria-label="上一篇 / 下一篇"></nav>
@@ -1191,10 +1191,10 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
     <span class="note" id="ed-note"></span>
   </div>
   <div class="ownerbar__row">
-    <label class="note" for="ed-cusdis">留言 App ID</label>
-    <input type="text" id="ed-cusdis" autocomplete="off" spellcheck="false" placeholder="從 cusdis.com 複製過來">
-    <button type="button" id="ed-cusdis-save">設定</button>
-    <span class="note" id="ed-cusdis-state"></span>
+    <label class="note" for="ed-disqus">留言 Disqus 名稱</label>
+    <input type="text" id="ed-disqus" autocomplete="off" spellcheck="false" placeholder="Disqus shortname，例如 cogitoergodukkha">
+    <button type="button" id="ed-disqus-save">設定</button>
+    <span class="note" id="ed-disqus-state"></span>
   </div>
   <div class="ownerbar__row">
     <label class="note" for="ed-token">GitHub 權杖</label>
@@ -1221,14 +1221,14 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
      so you can set them from the toolbar in 編輯模式 and they travel
      with the page when you publish. Nothing to edit by hand.
        data-goatcounter  your GoatCounter code (visitor count)
-       data-cusdis       your Cusdis App ID (comments)
-     While data-cusdis is empty no comment box appears for readers and
+       data-disqus       your Disqus shortname (comments)
+     While data-disqus is empty no comment box appears for readers and
      nothing is loaded.
      ----------------------------------------------------------------- */
   function setting(name){ return (document.body.getAttribute('data-' + name) || '').trim(); }
   var GOATCOUNTER   = setting('goatcounter');
-  var CUSDIS_APP_ID = setting('cusdis');
-  var CUSDIS_HOST   = 'https://cusdis.com';
+  /* a shortname becomes a subdomain, so keep it to what one can contain */
+  var DISQUS_SHORTNAME = setting('disqus').toLowerCase().replace(/[^a-z0-9-]/g, '');
 
   function siteName(){
     var h = document.querySelector('.masthead h1');
@@ -1254,6 +1254,17 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
   var bar_  = document.getElementById('progress');
 
   function ls(fn, dflt){ try { return fn(); } catch(e){ return dflt; } }
+
+  /* Mark everything that shipped with the page. A third-party widget may
+     append anything it likes to <head> or <body> — Disqus adds iframes
+     outside its own container — and whatever is not marked here is left
+     out when the page is written back, rather than being guessed at by
+     name. */
+  ['head', 'body'].forEach(function(where){
+    Array.prototype.slice.call(document[where].children).forEach(function(el){
+      el.setAttribute('data-static', '');
+    });
+  });
 
   /* ---------------- drafts: the owner's unpublished edits ---------- */
   var ORIGINAL = {};
@@ -1456,7 +1467,7 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
     obar.hidden = !on || previewing;
     chip.hidden = !on || !previewing;
     document.body.classList.toggle('is-owner', on && !previewing);
-    if (on) { say(tokState, token() ? '已記住' : '未設定'); showCusdisState(); }
+    if (on) { say(tokState, token() ? '已記住' : '未設定'); showDisqusState(); }
     refreshCounterNote();
     note();
   }
@@ -1547,26 +1558,29 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
   });
 
   /* ---- the comment App ID: stored on the page, published with it ---- */
-  var cusdisIn    = document.getElementById('ed-cusdis');
-  var cusdisState = document.getElementById('ed-cusdis-state');
+  var disqusIn    = document.getElementById('ed-disqus');
+  var disqusState = document.getElementById('ed-disqus-state');
 
-  function showCusdisState(){
-    var v = setting('cusdis');
-    say(cusdisState, v ? ('已設定 · ' + v) : '未設定 · 留言功能還沒開',
-        v ? 'ok' : '');
+  function showDisqusState(){
+    var v = setting('disqus');
+    say(disqusState, v ? ('已設定 · ' + v) : '未設定 · 留言功能還沒開', v ? 'ok' : '');
   }
 
-  document.getElementById('ed-cusdis-save').addEventListener('click', function(){
-    var v = cusdisIn.value.trim();
-    if (v === setting('cusdis')) { showCusdisState(); return; }
-    document.body.setAttribute('data-cusdis', v);
-    CUSDIS_APP_ID = v;
+  document.getElementById('ed-disqus-save').addEventListener('click', function(){
+    var v = disqusIn.value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '');
+    if (v === setting('disqus')) { showDisqusState(); return; }
+    document.body.setAttribute('data-disqus', v);
+    DISQUS_SHORTNAME = v;
     configDirty = true;
-    cusdisIn.value = '';
-    cusdisAsked = false;            /* let the widget load with the new id */
-    showCusdisState();
-    mountComments(currentId());
-    note(v ? '留言已開啟 · 按「發佈到網站」讓讀者也看到' : '留言已關閉 · 記得發佈', 'ok');
+    disqusIn.value = '';
+    showDisqusState();
+    if (v && disqusAsked) {
+      /* embed.js is tied to the old shortname, so start the page over */
+      note('留言已設定 · 重新整理頁面後生效，然後按「發佈到網站」', 'ok');
+    } else {
+      mountComments(currentId());
+      note(v ? '留言已開啟 · 按「發佈到網站」讓讀者也看到' : '留言已關閉 · 記得發佈', 'ok');
+    }
   });
 
   /* ---- the token, kept in this browser only ---- */
@@ -1599,9 +1613,16 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
     q('#progress').removeAttribute('style');
     q('#postnav').innerHTML = '';
     var hits = q('#hits'); hits.setAttribute('hidden', ''); hits.textContent = '';
-    /* anything the page loaded at runtime: analytics, the comment widget */
+    /* anything a widget added at runtime, wherever it put it */
+    ['head', 'body'].forEach(function(where){
+      var parent = doc.querySelector(where);
+      if (!parent) return;
+      Array.prototype.slice.call(parent.children).forEach(function(el){
+        if (!el.hasAttribute('data-static')) parent.removeChild(el);
+      });
+    });
     qa('[data-injected]').forEach(function(el){ el.parentNode.removeChild(el); });
-    var thread = q('#cusdis_thread');
+    var thread = q('#disqus_thread');
     if (thread) {
       thread.innerHTML = '';
       Array.prototype.slice.call(thread.attributes).forEach(function(a){
@@ -1627,8 +1648,9 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
     q('#ed-tokstate').textContent = ''; q('#ed-tokstate').className = 'note';
     /* the token is never written into the page */
     var tk = q('#ed-token'); if (tk) { tk.value = ''; tk.removeAttribute('value'); }
-    var ci = q('#ed-cusdis'); if (ci) { ci.value = ''; ci.removeAttribute('value'); }
-    var cs = q('#ed-cusdis-state'); if (cs) { cs.textContent = ''; cs.className = 'note'; }
+    var ci = q('#ed-disqus'); if (ci) { ci.value = ''; ci.removeAttribute('value'); }
+    var cs = q('#ed-disqus-state'); if (cs) { cs.textContent = ''; cs.className = 'note'; }
+    qa('[data-static]').forEach(function(el){ el.removeAttribute('data-static'); });
     doc.querySelector('body').className = '';
     return '<!doctype html>\n' + doc.outerHTML + '\n';
   }
@@ -1707,14 +1729,7 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
   });
 
   /* ---------------- comments ---------------- */
-  var cusdisAsked = false;
-
-  function themeNow(){
-    var t = document.documentElement.getAttribute('data-theme');
-    if (t === 'dark' || t === 'light') return t;
-    return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
-      ? 'dark' : 'light';
-  }
+  var disqusAsked = false, disqusPage = {};
 
   function commentsNote(txt, ownerOnly){
     var el = document.getElementById('comments-note');
@@ -1722,23 +1737,21 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
     el.textContent = txt; el.hidden = false;
   }
 
-  function drawCusdis(host){
-    var C = window.CUSDIS;
-    if (!C) return false;
-    try {
-      if (typeof C.renderTo === 'function') { C.renderTo(host); return true; }
-      if (typeof C.initial === 'function') { C.initial(); return true; }
-    } catch (e) {}
-    return false;
-  }
+  /* Disqus reads this when it loads and on every reset */
+  window.disqus_config = function(){
+    this.page.identifier = disqusPage.identifier;
+    this.page.url        = disqusPage.url;
+    this.page.title      = disqusPage.title;
+  };
 
-  function loadCusdis(){
-    if (cusdisAsked) return;
-    cusdisAsked = true;
+  function loadDisqus(){
+    if (disqusAsked) return;
+    disqusAsked = true;
     var s = document.createElement('script');
-    s.async = true; s.defer = true;
-    s.setAttribute('data-injected', '');   /* stripped before publishing */
-    s.src = CUSDIS_HOST + '/js/cusdis.es.js';
+    s.async = true;
+    s.setAttribute('data-injected', '');      /* left out when publishing */
+    s.setAttribute('data-timestamp', +new Date());
+    s.src = 'https://' + DISQUS_SHORTNAME + '.disqus.com/embed.js';
     s.onerror = function(){ commentsNote('留言暫時無法載入 · comments could not load'); };
     document.body.appendChild(s);
   }
@@ -1747,42 +1760,32 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
      because every essay lives at the same address behind a #/hash */
   function mountComments(id){
     var box  = document.getElementById('comments');
-    var host = document.getElementById('cusdis_thread');
+    var host = document.getElementById('disqus_thread');
     var isPost = !!(id && TITLES[id]);
 
     if (!isPost) { box.hidden = true; return; }
-    if (!CUSDIS_APP_ID) {
+    if (!DISQUS_SHORTNAME) {
       box.hidden = !isOwner();
-      host.innerHTML = '';
-      commentsNote('留言功能未設定 · paste your Cusdis App ID into the page', true);
+      if (host) host.innerHTML = '';
+      commentsNote('留言功能未設定 · set your Disqus shortname in the toolbar', true);
       return;
     }
 
     box.hidden = false;
     commentsNote('');
-    host.innerHTML = '';
-    host.setAttribute('data-host', CUSDIS_HOST);
-    host.setAttribute('data-app-id', CUSDIS_APP_ID);
-    host.setAttribute('data-page-id', id);
-    host.setAttribute('data-page-title', TITLES[id] || id);
-    host.setAttribute('data-page-url', location.origin + location.pathname + '#/' + id);
-    host.setAttribute('data-theme', themeNow());
-
-    if (!drawCusdis(host)) loadCusdis();
-  }
-
-  /* follow the reader's light/dark setting */
-  if (window.matchMedia) {
-    var mq = window.matchMedia('(prefers-color-scheme: dark)');
-    var onScheme = function(){
-      var t = themeNow(), host = document.getElementById('cusdis_thread');
-      if (host) host.setAttribute('data-theme', t);
-      if (window.CUSDIS && typeof window.CUSDIS.setTheme === 'function') {
-        try { window.CUSDIS.setTheme(t); } catch (e) {}
-      }
+    disqusPage = {
+      identifier: id,
+      url: location.origin + location.pathname + '#/' + id,
+      title: TITLES[id] || id
     };
-    if (mq.addEventListener) mq.addEventListener('change', onScheme);
-    else if (mq.addListener) mq.addListener(onScheme);
+
+    if (disqusAsked && window.DISQUS && typeof window.DISQUS.reset === 'function') {
+      try {
+        window.DISQUS.reset({ reload: true, config: window.disqus_config });
+        return;
+      } catch (e) {}
+    }
+    loadDisqus();
   }
 
   /* ---------------- visitor counter ---------------- */
