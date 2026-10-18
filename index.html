@@ -322,7 +322,7 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
 </style>
 
 </head>
-<body>
+<body data-goatcounter="cogitoergodukkha" data-cusdis="">
 <div id="progress" aria-hidden="true"></div>
 
 <div class="topbar" id="topbar" hidden>
@@ -1191,6 +1191,12 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
     <span class="note" id="ed-note"></span>
   </div>
   <div class="ownerbar__row">
+    <label class="note" for="ed-cusdis">留言 App ID</label>
+    <input type="text" id="ed-cusdis" autocomplete="off" spellcheck="false" placeholder="從 cusdis.com 複製過來">
+    <button type="button" id="ed-cusdis-save">設定</button>
+    <span class="note" id="ed-cusdis-state"></span>
+  </div>
+  <div class="ownerbar__row">
     <label class="note" for="ed-token">GitHub 權杖</label>
     <input type="password" id="ed-token" autocomplete="off" spellcheck="false" placeholder="github_pat_… 只存在這台電腦">
     <button type="button" id="ed-token-save">記住</button>
@@ -1210,16 +1216,18 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
      Your own visits are not counted once you have opened #/owner
      in the browser you read from.
      ----------------------------------------------------------------- */
-  var GOATCOUNTER = 'cogitoergodukkha';
-
   /* -----------------------------------------------------------------
-     留言 · Comments (Cusdis)
-     Sign up at cusdis.com, add this site, and paste the App ID here.
-     Readers need no account: a name and a comment is all. Nothing is
-     shown on the page until you approve it. While this is empty no
-     comment box appears and nothing is loaded.
+     Settings live as data- attributes on <body> rather than in here,
+     so you can set them from the toolbar in 編輯模式 and they travel
+     with the page when you publish. Nothing to edit by hand.
+       data-goatcounter  your GoatCounter code (visitor count)
+       data-cusdis       your Cusdis App ID (comments)
+     While data-cusdis is empty no comment box appears for readers and
+     nothing is loaded.
      ----------------------------------------------------------------- */
-  var CUSDIS_APP_ID = '';
+  function setting(name){ return (document.body.getAttribute('data-' + name) || '').trim(); }
+  var GOATCOUNTER   = setting('goatcounter');
+  var CUSDIS_APP_ID = setting('cusdis');
   var CUSDIS_HOST   = 'https://cusdis.com';
 
   function siteName(){
@@ -1429,7 +1437,7 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
   var noteEl  = document.getElementById('ed-note');
   var tokIn   = document.getElementById('ed-token');
   var tokState= document.getElementById('ed-tokstate');
-  var editing = false, previewing = false, busy = false;
+  var editing = false, previewing = false, busy = false, configDirty = false;
 
   function isOwner(){ return ls(function(){ return localStorage.getItem(K_OWNER) === '1'; }, false); }
   function token(){ return ls(function(){ return localStorage.getItem(K_TOKEN) || ''; }, ''); }
@@ -1448,7 +1456,7 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
     obar.hidden = !on || previewing;
     chip.hidden = !on || !previewing;
     document.body.classList.toggle('is-owner', on && !previewing);
-    if (on) say(tokState, token() ? '已記住' : '未設定');
+    if (on) { say(tokState, token() ? '已記住' : '未設定'); showCusdisState(); }
     refreshCounterNote();
     note();
   }
@@ -1459,12 +1467,12 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
   }
 
   function note(msg, kind){
-    var n = draftCount();
+    var n = draftCount(), pending = n + (configDirty ? 1 : 0);
     if (msg) say(noteEl, msg, kind);
-    else say(noteEl, n ? ('有 ' + n + ' 處修改還沒發佈') : '目前跟線上的版本一樣');
-    bSave.disabled = busy || !n;
+    else say(noteEl, pending ? ('有 ' + pending + ' 處修改還沒發佈') : '目前跟線上的版本一樣');
+    bSave.disabled = busy || !pending;
     bReset.disabled = busy || !n;
-    bPub.disabled = busy || !n;
+    bPub.disabled = busy || !pending;
   }
 
   /* ---- editing ----
@@ -1538,6 +1546,29 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
     readPosts(); route(); note();
   });
 
+  /* ---- the comment App ID: stored on the page, published with it ---- */
+  var cusdisIn    = document.getElementById('ed-cusdis');
+  var cusdisState = document.getElementById('ed-cusdis-state');
+
+  function showCusdisState(){
+    var v = setting('cusdis');
+    say(cusdisState, v ? ('已設定 · ' + v) : '未設定 · 留言功能還沒開',
+        v ? 'ok' : '');
+  }
+
+  document.getElementById('ed-cusdis-save').addEventListener('click', function(){
+    var v = cusdisIn.value.trim();
+    if (v === setting('cusdis')) { showCusdisState(); return; }
+    document.body.setAttribute('data-cusdis', v);
+    CUSDIS_APP_ID = v;
+    configDirty = true;
+    cusdisIn.value = '';
+    cusdisAsked = false;            /* let the widget load with the new id */
+    showCusdisState();
+    mountComments(currentId());
+    note(v ? '留言已開啟 · 按「發佈到網站」讓讀者也看到' : '留言已關閉 · 記得發佈', 'ok');
+  });
+
   /* ---- the token, kept in this browser only ---- */
   document.getElementById('ed-token-save').addEventListener('click', function(){
     var v = tokIn.value.trim();
@@ -1596,6 +1627,8 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
     q('#ed-tokstate').textContent = ''; q('#ed-tokstate').className = 'note';
     /* the token is never written into the page */
     var tk = q('#ed-token'); if (tk) { tk.value = ''; tk.removeAttribute('value'); }
+    var ci = q('#ed-cusdis'); if (ci) { ci.value = ''; ci.removeAttribute('value'); }
+    var cs = q('#ed-cusdis-state'); if (cs) { cs.textContent = ''; cs.className = 'note'; }
     doc.querySelector('body').className = '';
     return '<!doctype html>\n' + doc.outerHTML + '\n';
   }
@@ -1665,6 +1698,7 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
       .then(function(){
         regions().forEach(function(el){ ORIGINAL[el.getAttribute('data-editable')] = cleanHtml(el); });
         ls(function(){ localStorage.removeItem(K_DRAFT); });
+        configDirty = false;
         busy = false; note('已發佈 · GitHub Pages 約一分鐘後更新', 'ok');
       })
       .catch(function(err){
