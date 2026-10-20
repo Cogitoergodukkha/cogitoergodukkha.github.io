@@ -322,7 +322,7 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
 </style>
 
 </head>
-<body data-goatcounter="cogitoergodukkha" data-disqus="">
+<body data-goatcounter="cogitoergodukkha" data-disqus="" data-disqus-lang="zh-TW">
 <div id="progress" aria-hidden="true"></div>
 
 <div class="topbar" id="topbar" hidden>
@@ -1222,6 +1222,7 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
      with the page when you publish. Nothing to edit by hand.
        data-goatcounter  your GoatCounter code (visitor count)
        data-disqus       your Disqus shortname (comments)
+       data-disqus-lang  the comment box's language, e.g. zh-TW, zh, en
      While data-disqus is empty no comment box appears for readers and
      nothing is loaded.
      ----------------------------------------------------------------- */
@@ -1713,8 +1714,15 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
       })
       .then(function(r){
         return r.json().then(function(j){
-          if (!r.ok) throw new Error((j && j.message) || ('發佈失敗 ' + r.status));
-          return j;
+          if (r.ok) return j;
+          /* GitHub's own wording here is opaque; say what to actually do */
+          if (r.status === 403) {
+            throw new Error('權杖只能讀、不能寫 · set the token\'s Contents permission to Read and write');
+          }
+          if (r.status === 409) {
+            throw new Error('線上的版本比較新 · reload the page, redo the edit, publish again');
+          }
+          throw new Error((j && j.message) || ('發佈失敗 ' + r.status));
         });
       })
       .then(function(){
@@ -1742,6 +1750,9 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
     this.page.identifier = disqusPage.identifier;
     this.page.url        = disqusPage.url;
     this.page.title      = disqusPage.title;
+    /* without this Disqus picks its own, which is not necessarily one
+       your readers read; change it in the data-disqus-lang attribute */
+    this.language        = setting('disqus-lang') || 'zh-TW';
   };
 
   function loadDisqus(){
