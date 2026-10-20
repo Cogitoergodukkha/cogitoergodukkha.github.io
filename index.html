@@ -322,7 +322,7 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
 </style>
 
 </head>
-<body data-goatcounter="cogitoergodukkha" data-disqus="asima" data-disqus-lang="zh-TW">
+<body data-goatcounter="cogitoergodukkha" data-disqus="asima" data-disqus-lang="zh_TW">
 <div id="progress" aria-hidden="true"></div>
 
 <div class="topbar" id="topbar" hidden="">
@@ -1277,7 +1277,7 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
      with the page when you publish. Nothing to edit by hand.
        data-goatcounter  your GoatCounter code (visitor count)
        data-disqus       your Disqus shortname (comments)
-       data-disqus-lang  the comment box's language, e.g. zh-TW, zh, en
+       data-disqus-lang  the comment box's language: zh_TW, zh_CN, en
      While data-disqus is empty no comment box appears for readers and
      nothing is loaded.
      ----------------------------------------------------------------- */
@@ -1832,9 +1832,11 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
     this.page.identifier = disqusPage.identifier;
     this.page.url        = disqusPage.url;
     this.page.title      = disqusPage.title;
-    /* without this Disqus picks its own, which is not necessarily one
-       your readers read; change it in data-disqus-lang on <body> */
-    this.language        = setting('disqus-lang') || 'zh-TW';
+    /* Without this Disqus picks its own, which is not necessarily one
+       your readers read. Its locale codes use an underscore (zh_TW,
+       zh_CN, en), so a hyphen is accepted here and converted; an
+       unrecognised code makes Disqus fall back to its own choice. */
+    this.language        = (setting('disqus-lang') || 'zh_TW').replace('-', '_');
   };
 
   function loadDisqus(){
