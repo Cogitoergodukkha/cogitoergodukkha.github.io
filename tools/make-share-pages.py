@@ -11,6 +11,9 @@ Open Graph tags, plus a 1200x630 preview image at /og/<id>.jpg taken
 from the essay's own photograph.  A person opening one is sent straight
 on to the essay; a preview crawler reads the tags and stops there.
 
+While an essay is open the site rewrites the address bar to its page
+here, so one of these must exist for every essay on the page.
+
 Re-run after adding an essay, or after changing a title, excerpt or
 photograph:   python3 tools/make-share-pages.py
 """
@@ -83,7 +86,7 @@ PAGE = '''<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{title} · {site}</title>
-<link rel="canonical" href="{base}/#/{pid}">
+<link rel="canonical" href="{base}/p/{pid}.html">
 <meta name="description" content="{desc}">
 <meta name="author" content="Abraham Lim">
 
@@ -101,9 +104,10 @@ PAGE = '''<!doctype html>
 <meta name="twitter:description" content="{desc}">
 <meta name="twitter:image" content="{base}/og/{pid}.jpg">
 
-<!-- a reader is sent straight on; a preview crawler reads the tags above
-     and never gets this far -->
-<meta http-equiv="refresh" content="0; url=/#/{pid}">
+<!-- A reader is sent straight on by this; a preview crawler does not run
+     scripts, so it reads the tags above and stops there. Deliberately a
+     script and not a refresh meta: some crawlers follow one of those, and
+     would end up reading the front page instead of this essay. -->
 <script>location.replace('/#/{pid}');</script>
 <style>
 :root{{color-scheme:light dark}}
@@ -129,11 +133,16 @@ def main():
         shutil.rmtree(os.path.join(ROOT, d), ignore_errors=True)
         os.makedirs(os.path.join(ROOT, d))
 
+    fallback = os.path.join(ROOT, 'og.jpg')
     for pid, p in posts.items():
-        if not p.get('photo'):
-            print('  !! %s has no photograph, skipped' % pid)
-            continue
-        preview_image(p['photo'], os.path.join(ROOT, 'og', pid + '.jpg'))
+        out = os.path.join(ROOT, 'og', pid + '.jpg')
+        if p.get('photo'):
+            preview_image(p['photo'], out)
+        else:
+            # every essay must have a page: while one is open the site puts
+            # /p/<id>.html in the address bar, and reloading it has to work
+            print('  !! %s has no photograph, using the site picture' % pid)
+            shutil.copyfile(fallback, out)
         page = PAGE.format(
             base=BASE, site=html.escape(SITE, quote=True), pid=pid,
             title=html.escape(p['title'], quote=True),
