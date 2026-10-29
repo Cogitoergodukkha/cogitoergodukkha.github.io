@@ -108,7 +108,13 @@ PAGE = '''<!doctype html>
      scripts, so it reads the tags above and stops there. Deliberately a
      script and not a refresh meta: some crawlers follow one of those, and
      would end up reading the front page instead of this essay. -->
-<script>location.replace('/#/{pid}');</script>
+<script>
+/* Keep whatever fragment the reader arrived with, so that
+   /p/{pid}.html#/owner still reaches owner mode rather than being
+   swallowed here -- the address bar reads /p/<id>.html while an essay
+   is open, so that is where the author types it. */
+location.replace('/' + (location.hash && location.hash !== '#/' ? location.hash : '#/{pid}'));
+</script>
 <style>
 :root{{color-scheme:light dark}}
 body{{margin:0;min-height:100vh;display:grid;place-items:center;
