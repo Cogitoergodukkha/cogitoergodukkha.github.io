@@ -1626,6 +1626,17 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
   }
   document.addEventListener('scroll', onScroll, {passive:true});
 
+  /* An essay lives at a #/fragment, and a fragment never reaches the
+     server, so a link to one previews as the whole site. Each essay also
+     has a small page of its own at /p/<id>.html carrying its own title,
+     words and picture; that is what gets copied, so a shared essay
+     previews as itself. */
+  function shareUrl(){
+    var id = currentId();
+    if (!id || !TITLES[id]) return location.href;
+    return location.origin + location.pathname.replace(/[^/]*$/, '') + 'p/' + id + '.html';
+  }
+
   var btn = document.getElementById('copy');
   btn.addEventListener('click', function(){
     var done = function(ok){
@@ -1633,7 +1644,7 @@ body.is-editing .field{background:rgba(94,148,129,.14);border-bottom-color:var(-
       setTimeout(function(){ btn.textContent = '複製連結 · Copy link'; }, 2200);
     };
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(location.href).then(function(){ done(true); }, function(){ done(false); });
+      navigator.clipboard.writeText(shareUrl()).then(function(){ done(true); }, function(){ done(false); });
     } else { done(false); }
   });
 
